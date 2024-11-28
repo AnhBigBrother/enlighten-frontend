@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 		});
 
 		/*<---set cookies and redirect--->*/
-		const cookieStore = cookies();
+		const cookieStore = await cookies();
 		cookieStore.set("access_token", access_token, { maxAge: COOKIE_AGE });
 		cookieStore.set("refresh_token", refresh_token, { maxAge: COOKIE_AGE });
 		return NextResponse.redirect(FRONTEND_URL);

@@ -30,12 +30,12 @@ export async function GET(req: NextRequest) {
 		}).then((res) => res.json());
 
 		/*<---login to backend via google access_token--->*/
-		const { access_token, refresh_token } = await _post("auth/google", {
+		const { access_token, refresh_token } = await _post("oauth/google", {
 			searchParams: { token_type: token.token_type, access_token: token.access_token },
 		});
 
 		/*<---set cookies and redirect--->*/
-		const cookieStore = cookies();
+		const cookieStore = await cookies();
 		cookieStore.set("access_token", access_token, { maxAge: COOKIE_AGE });
 		cookieStore.set("refresh_token", refresh_token, { maxAge: COOKIE_AGE });
 		return NextResponse.redirect(FRONTEND_URL);

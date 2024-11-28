@@ -13,6 +13,7 @@ export const FirstLoad = () => {
 		const access_token = localStorage.getItem("access_token");
 		_get("user/me/session", { authorization: access_token || "" })
 			.then((session) => {
+				console.log(session);
 				updateUser(session);
 				toast({
 					title: "Welcome!",
