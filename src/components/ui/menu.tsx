@@ -47,10 +47,10 @@ export const MenuGroup = React.forwardRef<HTMLDivElement, Props>(
 	},
 );
 
-export const MenuItem = React.forwardRef<HTMLLIElement, Props & { active?: boolean }>(
+export const MenuItem = React.forwardRef<HTMLDivElement, Props & { active?: boolean }>(
 	({ children, className, active }, ref) => {
 		return (
-			<li
+			<div
 				className={cn(
 					"w-full cursor-pointer rounded-md p-2 hover:bg-accent",
 					className,
@@ -58,7 +58,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, Props & { active?: boole
 				)}
 				ref={ref}>
 				{children}
-			</li>
+			</div>
 		);
 	},
 );

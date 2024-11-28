@@ -4,8 +4,9 @@ import { create } from "zustand";
 export type TUser = {
 	email: string;
 	name: string;
-	id: number | string;
 	image?: string;
+	jti: number | string;
+	sub: "access_token" | "refresh_token";
 	exp?: number;
 	iat?: number;
 } | null;

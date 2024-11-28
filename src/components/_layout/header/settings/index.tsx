@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, User } from "lucide-react";
-import { _get } from "@/lib/fetch";
+import { _get, _post } from "@/lib/fetch";
 import useUserStore from "@/stores/user-store";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
@@ -40,7 +40,7 @@ export const Setting = () => {
 	const { setTheme, theme } = useTheme();
 	const { toast } = useToast();
 	const handleLogout = () => {
-		_get("auth/logout")
+		_post("user/signout")
 			.then((result) => {
 				resetUser();
 				toast({

@@ -11,14 +11,12 @@ export const FirstLoad = () => {
 	const { toast } = useToast();
 	useEffect(() => {
 		const access_token = localStorage.getItem("access_token");
-		_get("user/session", { authorization: access_token || "" })
+		_get("user/me/session", { authorization: access_token || "" })
 			.then((session) => {
-				const user = session.user;
-				delete user.typ;
-				updateUser(user);
+				updateUser(session);
 				toast({
 					title: "Welcome!",
-					description: `You are loged in as ${user.name}`,
+					description: `You are loged in as ${session.name}`,
 				});
 			})
 			.catch((err) => {

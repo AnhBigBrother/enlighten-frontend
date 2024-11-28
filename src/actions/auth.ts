@@ -17,8 +17,8 @@ export const Login = async (dto: LoginDTO) => {
 				error: "Validation error",
 			};
 		}
-		const data = await _post("/auth/login", { body: result.data });
-		const cookieStore = cookies();
+		const data = await _post("/user/signin", { body: result.data });
+		const cookieStore = await cookies();
 		cookieStore.set("access_token", data.access_token, { maxAge: COOKIE_AGE });
 		cookieStore.set("refresh_token", data.refresh_token, { maxAge: COOKIE_AGE });
 		return data;
@@ -40,8 +40,8 @@ export const Signup = async (dto: SignupDTO) => {
 				error: "Validation error",
 			};
 		}
-		const data = await _post("/auth/signup", { body: result.data });
-		const cookieStore = cookies();
+		const data = await _post("/user/signup", { body: result.data });
+		const cookieStore = await cookies();
 		cookieStore.set("access_token", data.access_token, { maxAge: COOKIE_AGE });
 		cookieStore.set("refresh_token", data.refresh_token, { maxAge: COOKIE_AGE });
 		return data;
