@@ -40,7 +40,7 @@ function LoginForm() {
 		const result = await Login(data);
 		if (result.error) {
 			setSuccess("");
-			setError(result.message);
+			setError(result.error);
 			setIsPending(false);
 			return;
 		}

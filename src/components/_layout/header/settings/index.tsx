@@ -221,14 +221,14 @@ export const Setting = () => {
 							</DropdownMenuItem>
 						) : (
 							<>
-								<DropdownMenuItem>
+								<DropdownMenuItem asChild>
 									<Link
 										className='h-full w-full'
 										href='/login'>
 										Login
 									</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem>
+								<DropdownMenuItem asChild>
 									<Link
 										className='h-full w-full'
 										href='/signup'>

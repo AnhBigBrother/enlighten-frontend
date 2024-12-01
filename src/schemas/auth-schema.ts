@@ -19,6 +19,7 @@ const SignupSchema = z.object({
 		.max(30, {
 			message: "Name must be less than 30 characters",
 		}),
+	image: z.string().optional(),
 });
 type LoginDTO = z.infer<typeof LoginSchema>;
 type SignupDTO = z.infer<typeof SignupSchema>;

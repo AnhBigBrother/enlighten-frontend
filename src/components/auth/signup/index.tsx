@@ -17,11 +17,12 @@ import { _get } from "@/lib/fetch";
 import { SignupDTO, SignupSchema } from "@/schemas/auth-schema";
 import useUserStore from "@/stores/user-store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 function SignupForm() {
+	const searchParams = useSearchParams();
 	const router = useRouter();
 	const [isPending, setIsPending] = useState<boolean>(false);
 	const [success, setSuccess] = useState<string>("");
@@ -29,9 +30,10 @@ function SignupForm() {
 	const form = useForm<SignupDTO>({
 		resolver: zodResolver(SignupSchema),
 		defaultValues: {
-			email: "",
-			name: "",
+			email: searchParams.get("email") || "",
+			name: searchParams.get("name") || "",
 			password: "",
+			image: searchParams.get("image") || "",
 		},
 	});
 	const updateUser = useUserStore.use.update();
@@ -41,7 +43,7 @@ function SignupForm() {
 		const result = await Signup(data);
 		if (result.error) {
 			setSuccess("");
-			setError(result.message);
+			setError(result.error);
 			setIsPending(false);
 			return;
 		}
@@ -49,10 +51,8 @@ function SignupForm() {
 		localStorage.setItem("access_token", access_token);
 		setError("");
 		setSuccess("Success!");
-		_get("user/session", { authorization: access_token || "" })
-			.then((session) => {
-				const user = session.user;
-				delete user.typ;
+		_get("user/me/session", { authorization: access_token || "" })
+			.then((user) => {
 				updateUser(user);
 			})
 			.catch((err) => {

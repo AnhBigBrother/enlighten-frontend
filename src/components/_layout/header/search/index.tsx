@@ -11,7 +11,7 @@ export const Search = () => {
 		e.preventDefault();
 	};
 	return (
-		<search className='min-w-20 max-w-[32rem] flex-grow overflow-hidden rounded-full border bg-secondary'>
+		<search className='min-w-20 max-w-[32rem] flex-grow overflow-hidden rounded-full border bg-secondary outline-1 outline-primary focus-within:outline'>
 			<form className='flex h-10 w-full flex-row items-center justify-center pr-3'>
 				<IconButton onClick={(e) => handleSearch(e)}>
 					<HiMiniMagnifyingGlass className='h-6 w-10' />
