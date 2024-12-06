@@ -1,8 +1,8 @@
 "use client";
 
 import { Signup } from "@/actions/auth";
-import { FormError, FormSuccess } from "@/components/_shared/auth-form/form-notification";
-import { FormWrapper } from "@/components/_shared/auth-form/form-wrapper";
+import { FormError, FormSuccess } from "@/components/auth/auth-form/form-notification";
+import { FormWrapper } from "@/components/auth/auth-form/form-wrapper";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -13,8 +13,9 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input, PasswordInput } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { _get } from "@/lib/fetch";
-import { SignupDTO, SignupSchema } from "@/schemas/auth-schema";
+import { SignupDTO, SignupSchema } from "@/schemas/auth";
 import useUserStore from "@/stores/user-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -24,6 +25,7 @@ import { useForm } from "react-hook-form";
 function SignupForm() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
+	const { toast } = useToast();
 	const [isPending, setIsPending] = useState<boolean>(false);
 	const [success, setSuccess] = useState<string>("");
 	const [error, setError] = useState<string>("");
@@ -52,8 +54,12 @@ function SignupForm() {
 		setError("");
 		setSuccess("Success!");
 		_get("user/me/session", { authorization: access_token || "" })
-			.then((user) => {
-				updateUser(user);
+			.then((userSession) => {
+				updateUser(userSession);
+				toast({
+					title: "Welcome!",
+					description: `You are loged in as ${userSession.name}`,
+				});
 			})
 			.catch((err) => {
 				console.error(err);
@@ -66,7 +72,7 @@ function SignupForm() {
 
 	return (
 		<FormWrapper
-			headerLabel='Signup'
+			headerLabel='Sign Up'
 			showOAuth={false}
 			footerLinkLabel='Already have account? Login here!'
 			footerLinkHref='/login'>
@@ -79,7 +85,7 @@ function SignupForm() {
 						name='email'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Email</FormLabel>
+								<FormLabel htmlFor='email'>Email</FormLabel>
 								<FormControl>
 									<Input
 										{...field}
@@ -94,7 +100,7 @@ function SignupForm() {
 						name='name'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Name</FormLabel>
+								<FormLabel htmlFor='name'>Name</FormLabel>
 								<FormControl>
 									<Input
 										{...field}
@@ -109,7 +115,7 @@ function SignupForm() {
 						name='password'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Password</FormLabel>
+								<FormLabel htmlFor='password'>Password</FormLabel>
 								<FormControl>
 									<PasswordInput
 										{...field}

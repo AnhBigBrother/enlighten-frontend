@@ -2,7 +2,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { _get } from "@/lib/fetch";
-import useUserStore from "@/stores/user-store";
+import useUserStore, { TUser } from "@/stores/user-store";
 import { useEffect } from "react";
 
 export const FirstLoad = () => {
@@ -12,11 +12,11 @@ export const FirstLoad = () => {
 	useEffect(() => {
 		const access_token = localStorage.getItem("access_token");
 		_get("user/me/session", { authorization: access_token || "" })
-			.then((session) => {
-				updateUser(session);
+			.then((userSession: TUser) => {
+				updateUser(userSession);
 				toast({
 					title: "Welcome!",
-					description: `You are loged in as ${session.name}`,
+					description: `You are loged in as ${userSession!.name}`,
 				});
 			})
 			.catch((err) => {

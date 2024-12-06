@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronsUpDown } from "lucide-react";
 
-export const SortContents = () => {
+export const SortBy = () => {
 	return (
 		<div className='w-full py-2'>
 			<DropdownMenu>
@@ -20,14 +20,13 @@ export const SortContents = () => {
 						<ChevronsUpDown className='h-4 w-4' />
 					</button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="start">
+				<DropdownMenuContent align='start'>
 					<DropdownMenuLabel>Sort by</DropdownMenuLabel>
 					<DropdownMenuSeparator></DropdownMenuSeparator>
 					<DropdownMenuGroup>
-						<DropdownMenuItem>Best</DropdownMenuItem>
+						<DropdownMenuItem>New</DropdownMenuItem>
 						<DropdownMenuItem>Top</DropdownMenuItem>
 						<DropdownMenuItem>Hot</DropdownMenuItem>
-						<DropdownMenuItem>New</DropdownMenuItem>
 					</DropdownMenuGroup>
 				</DropdownMenuContent>
 			</DropdownMenu>

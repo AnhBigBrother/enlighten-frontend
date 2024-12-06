@@ -4,11 +4,11 @@ import { create } from "zustand";
 export type TUser = {
 	email: string;
 	name: string;
-	image?: string;
+	image: string;
 	jti: number | string;
 	sub: "access_token" | "refresh_token";
-	exp?: number;
-	iat?: number;
+	exp: number;
+	iat: number;
 } | null;
 
 export type TUserStore = {

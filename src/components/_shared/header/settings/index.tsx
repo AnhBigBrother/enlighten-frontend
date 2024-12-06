@@ -61,10 +61,12 @@ export const Setting = () => {
 	return (
 		<menu className='flex flex-row items-center space-x-1 md:space-x-3'>
 			<div className='flex flex-row items-center'>
-				<IconButton className='sm:px-3'>
-					<NotebookPen />
-					<p className='ml-2 hidden sm:inline-block'>Write</p>
-				</IconButton>
+				<Link href={"/create"}>
+					<IconButton>
+						<NotebookPen />
+						<p className='ml-2 hidden sm:inline-block'>Write</p>
+					</IconButton>
+				</Link>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<IconButton>

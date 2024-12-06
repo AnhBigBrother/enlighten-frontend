@@ -13,7 +13,6 @@ import {
 	NotebookText,
 	SquareUser,
 	Telescope,
-	TrendingUp,
 	User,
 } from "lucide-react";
 import { HiOutlineUserGroup } from "react-icons/hi2";
@@ -48,16 +47,12 @@ export const Logo = () => {
 				<ScrollArea className='flex h-full w-64 flex-col items-start justify-start bg-background py-3 pl-3 pr-3 xl:w-72 xl:pr-5'>
 					<MenuGroup>
 						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
+							<Link
+								href={"/"}
+								className='flex w-full flex-row space-x-4'>
 								<House />
 								<p>Home</p>
-							</div>
-						</MenuItem>
-						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
-								<TrendingUp />
-								<p>Popular</p>
-							</div>
+							</Link>
 						</MenuItem>
 						<MenuItem>
 							<div className='flex w-full flex-row space-x-4'>
@@ -66,10 +61,12 @@ export const Logo = () => {
 							</div>
 						</MenuItem>
 						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
+							<Link
+								href={"/create"}
+								className='flex w-full flex-row space-x-4'>
 								<NotebookPen />
 								<p>Write post</p>
-							</div>
+							</Link>
 						</MenuItem>
 					</MenuGroup>
 					<MenuSeperator />

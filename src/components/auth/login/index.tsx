@@ -1,8 +1,8 @@
 "use client";
 
 import { Login } from "@/actions/auth";
-import { FormError, FormSuccess } from "@/components/_shared/auth-form/form-notification";
-import { FormWrapper } from "@/components/_shared/auth-form/form-wrapper";
+import { FormError, FormSuccess } from "@/components/auth/auth-form/form-notification";
+import { FormWrapper } from "@/components/auth/auth-form/form-wrapper";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -13,8 +13,9 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input, PasswordInput } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { _get } from "@/lib/fetch";
-import { LoginDTO, LoginSchema } from "@/schemas/auth-schema";
+import { LoginDTO, LoginSchema } from "@/schemas/auth";
 import useUserStore from "@/stores/user-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -23,6 +24,7 @@ import { useForm } from "react-hook-form";
 
 function LoginForm() {
 	const router = useRouter();
+	const { toast } = useToast();
 	const [isPending, setIsPending] = useState<boolean>(false);
 	const [success, setSuccess] = useState<string>("");
 	const [error, setError] = useState<string>("");
@@ -48,11 +50,13 @@ function LoginForm() {
 		localStorage.setItem("access_token", access_token);
 		setError("");
 		setSuccess("Success!");
-		_get("user/session", { authorization: access_token || "" })
-			.then((session) => {
-				const user = session.user;
-				delete user.typ;
-				updateUser(user);
+		_get("user/me/session", { authorization: access_token || "" })
+			.then((userSession) => {
+				updateUser(userSession);
+				toast({
+					title: "Welcome!",
+					description: `You are loged in as ${userSession.name}`,
+				});
 			})
 			.catch((err) => {
 				console.error(err);
@@ -65,7 +69,7 @@ function LoginForm() {
 
 	return (
 		<FormWrapper
-			headerLabel='Login'
+			headerLabel='Sign In'
 			showOAuth={true}
 			footerLinkLabel="Don't have an account? Signup here!"
 			footerLinkHref='/signup'>
@@ -78,7 +82,7 @@ function LoginForm() {
 						name='email'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Email</FormLabel>
+								<FormLabel htmlFor='email'>Email</FormLabel>
 								<FormControl>
 									<Input
 										{...field}
@@ -93,7 +97,7 @@ function LoginForm() {
 						name='password'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Password</FormLabel>
+								<FormLabel htmlFor='password'>Password</FormLabel>
 								<FormControl>
 									<PasswordInput
 										{...field}
