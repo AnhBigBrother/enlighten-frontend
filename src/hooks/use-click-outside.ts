@@ -21,4 +21,4 @@ const useClickOutside = (callback: () => void) => {
 	return ref;
 };
 
-export default useClickOutside;
+export { useClickOutside };

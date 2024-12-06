@@ -22,10 +22,10 @@ export const Recents = () => {
 						Clear
 					</Button>
 				</div>
-				{recents.map((data, idx) => (
+				{recents.map((data) => (
 					<RecentPostCard
 						data={data}
-						key={idx}
+						key={data.id}
 					/>
 				))}
 			</div>

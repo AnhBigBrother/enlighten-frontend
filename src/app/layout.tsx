@@ -8,6 +8,7 @@ import PageHeader from "@/components/_shared/header";
 
 import { Suspense } from "react";
 import { Recents } from "@/components/_shared/recents";
+import { Spinner } from "@/components/_shared/spinner";
 
 const merriweather = localFont({
 	src: "./merriweather.ttf",
@@ -59,7 +60,14 @@ export default function RootLayout({
 							</div>
 						</div>
 					</div>
-					<Suspense fallback={<div>Loading...</div>}>{auth} </Suspense>
+					<Suspense
+						fallback={
+							<div className='fixed left-0 top-0 grid place-content-center'>
+								<Spinner />
+							</div>
+						}>
+						{auth}
+					</Suspense>
 				</ThemeProvider>
 			</body>
 		</html>

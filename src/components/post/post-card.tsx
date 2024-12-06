@@ -5,9 +5,10 @@ import { TPostData } from "@/types/post";
 import Link from "next/link";
 import React from "react";
 
-const PostCard = ({ postData }: { postData: TPostData }) => {
+const PostCard = React.forwardRef(({ postData }: { postData: TPostData }, ref: any) => {
 	return (
 		<Link
+			ref={ref}
 			href={`/post/${postData.id}`}
 			className='w-full rounded-lg border p-3 hover:bg-secondary/50'>
 			<PostHeader
@@ -29,6 +30,6 @@ const PostCard = ({ postData }: { postData: TPostData }) => {
 			/>
 		</Link>
 	);
-};
+});
 
 export { PostCard };

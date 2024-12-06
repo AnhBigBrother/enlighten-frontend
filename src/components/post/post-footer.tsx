@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/hooks/use-toast";
 import { _get, _post } from "@/lib/fetch";
 import { cn } from "@/lib/utils";
 import useUserStore from "@/stores/user-store";
@@ -22,6 +23,7 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	const [upVoted, setUpVoted] = useState<number>(up_voted);
 	const [downVoted, setDownVoted] = useState<number>(down_voted);
 	const router = useRouter();
+	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
 			_get(`/post/${id}/checkvoted`)
@@ -52,6 +54,11 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 			})
 			.catch((err) => {
 				console.error(err);
+				toast({
+					title: "Error",
+					description: err.error || "Error when upvoting post.",
+					variant: "destructive",
+				});
 			});
 	};
 	const handleClickDownVote = (e: React.MouseEvent) => {
@@ -72,6 +79,11 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 			})
 			.catch((err) => {
 				console.error(err);
+				toast({
+					title: "Error",
+					description: err.error || "Error when downvoting post.",
+					variant: "destructive",
+				});
 			});
 	};
 	const handleClickSave = () => {};

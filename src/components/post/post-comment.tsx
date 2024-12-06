@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import useUserStore from "@/stores/user-store";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/_shared/spinner";
+import { useOnScrollIn } from "@/hooks/use-on-scroll-in";
 
 const CommentReply = ({
 	postId,
@@ -27,6 +28,7 @@ const CommentReply = ({
 	replyData: TComment;
 	setIsReplyOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+	const { toast } = useToast();
 	const [hasVoted, setHasVoted] = useState<"up" | "none" | "down">("none");
 	const [upVoted, setUpVoted] = useState<number>(replyData.up_voted);
 	const [downVoted, setDownVoted] = useState<number>(replyData.down_voted);
@@ -59,6 +61,11 @@ const CommentReply = ({
 				}
 			})
 			.catch((err) => {
+				toast({
+					title: "Error",
+					description: err.error || "Error when upvoting comment.",
+					variant: "destructive",
+				});
 				console.error(err);
 			});
 	};
@@ -77,6 +84,11 @@ const CommentReply = ({
 				}
 			})
 			.catch((err) => {
+				toast({
+					title: "Error",
+					description: err.error || "Error when downvoting comment.",
+					variant: "destructive",
+				});
 				console.error(err);
 			});
 	};
@@ -226,6 +238,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	const [isLoadingReplies, setIsLoadingReplies] = useState<boolean>(false);
 	const [replies, setReplies] = useState<TComment[]>([]);
 	const user = useUserStore.use.user();
+	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
 			_get(`/post/${postId}/comment/${commentData.id}/checkvoted`)
@@ -266,6 +279,11 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 				}
 			})
 			.catch((err) => {
+				toast({
+					title: "Error",
+					description: err.error || "Error when upvoting comment.",
+					variant: "destructive",
+				});
 				console.error(err);
 			});
 	};
@@ -284,6 +302,11 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 				}
 			})
 			.catch((err) => {
+				toast({
+					title: "Error",
+					description: err.error || "Error when downvoting comment.",
+					variant: "destructive",
+				});
 				console.error(err);
 			});
 	};
@@ -374,12 +397,12 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 									<Spinner />
 								</div>
 							) : (
-								replies.map((rep, idx) => (
+								replies.map((rep) => (
 									<CommentReply
 										postId={postId}
 										replyData={rep}
 										setIsReplyOpen={setIsReplyOpen}
-										key={idx}
+										key={rep.id}
 									/>
 								))
 							)}
@@ -482,22 +505,39 @@ const CommentWritter = ({
 const PostComment = ({ postId }: { postId: string }) => {
 	const { toast } = useToast();
 	const [comments, setComments] = useState<TComment[]>([]);
-	const [isLoadingComments, setIsLoadingComments] = useState<boolean>(true);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [hasMore, setHasMore] = useState<boolean>(true);
+	const [offset, setOffset] = useState<number>(0);
+	const [lastComponentRef, hasIntersected] = useOnScrollIn();
+
 	useEffect(() => {
-		_get(`/post/${postId}/comment`)
-			.then((data: TComment[]) => {
-				setComments(data);
+		if (hasIntersected && hasMore && !isLoading) {
+			setIsLoading(true);
+			_get(`/post/${postId}/comment`, {
+				searchParams: {
+					offset: `${offset}`,
+					limit: "5",
+				},
 			})
-			.catch((err) => {
-				console.error(err);
-				toast({
-					title: "Error",
-					description: "Error when loading post's comments.",
-					variant: "destructive",
-				});
-			})
-			.finally(() => setIsLoadingComments(false));
-	}, []);
+				.then((data: TComment[]) => {
+					if (data.length === 0) {
+						setHasMore(false);
+						return;
+					}
+					setComments((pre) => [...pre, ...data]);
+					setOffset((pre) => pre + data.length);
+				})
+				.catch((err) => {
+					console.error(err);
+					toast({
+						title: "Error",
+						description: "Error when loading post's comments.",
+						variant: "destructive",
+					});
+				})
+				.finally(() => setIsLoading(false));
+		}
+	}, [hasIntersected]);
 	return (
 		<div className='flex w-full flex-col py-5'>
 			<CommentWritter
@@ -506,26 +546,27 @@ const PostComment = ({ postId }: { postId: string }) => {
 			/>
 			<h2 className='mt-10 text-xl font-bold'>Comments</h2>
 			<div className='mt-5 flex flex-col gap-5'>
-				{isLoadingComments ? (
-					<div
-						className='h-12 w-full
-					'>
-						<Spinner />
-					</div>
-				) : comments.length > 0 ? (
-					comments.map((c, idx) => (
-						<Comment
-							postId={postId}
-							commentData={c}
-							key={idx}
-						/>
-					))
-				) : (
+				{comments.map((c) => (
+					<Comment
+						postId={postId}
+						commentData={c}
+						key={c.id}
+					/>
+				))}
+				{!hasMore && !isLoading && comments.length === 0 && (
 					<p className='text-sm italic text-muted-foreground'>
 						There was no comment on this post yet
 					</p>
 				)}
+				{isLoading && hasMore && (
+					<div className='h-12 w-full'>
+						<Spinner />
+					</div>
+				)}
 			</div>
+			<div
+				className='h-1 w-full'
+				ref={lastComponentRef}></div>
 		</div>
 	);
 };

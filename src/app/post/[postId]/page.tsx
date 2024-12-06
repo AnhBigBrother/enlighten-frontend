@@ -1,3 +1,5 @@
+"use server";
+
 import { PostClient } from "@/components/post/post-client";
 import { PostComment } from "@/components/post/post-comment";
 import { PostContent } from "@/components/post/post-content";
