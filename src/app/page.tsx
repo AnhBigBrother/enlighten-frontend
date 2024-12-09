@@ -13,8 +13,9 @@ export default async function Home() {
 			offset: "0",
 		},
 	}).catch((error) => {
-		console.error(error);
+		console.log(error);
 	});
 
-	return <HomeClient serverLoadedPosts={serverLoadedPosts} />;
+	console.log(serverLoadedPosts);
+	return <HomeClient serverLoadedPosts={serverLoadedPosts || []} />;
 }

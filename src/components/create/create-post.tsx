@@ -101,7 +101,7 @@ const CreatePost = () => {
 				<div className='flex w-full items-center justify-end gap-3'>
 					<Button
 						type='button'
-						variant='destructive'
+						variant='secondary'
 						className='rounded-xl'
 						disabled={isLoading}
 						onClick={() => router.push("/")}>

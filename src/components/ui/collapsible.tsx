@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/utils";
@@ -6,11 +6,11 @@ import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 
-const Collapsible = CollapsiblePrimitive.Root
+const Collapsible = CollapsiblePrimitive.Root;
 
-const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger
+const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger;
 
-const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent
+const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent;
 
 type CollapsibleMenuProps = {
 	children: React.ReactNode;
@@ -31,7 +31,11 @@ const CollapsibleMenu = React.forwardRef<HTMLDivElement, CollapsibleMenuProps>(
 					{label && <h4 className='font-semibold'>{label}</h4>}
 					<CollapsibleTrigger
 						asChild
-						onClick={() => setisOpen((pre) => !pre)}>
+						onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							setisOpen((pre) => !pre);
+						}}>
 						<IconButton className='ml-2 rounded-md p-1'>
 							<ChevronDown
 								className={cn("h-5 w-5", {
