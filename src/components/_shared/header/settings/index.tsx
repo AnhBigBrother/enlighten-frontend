@@ -99,7 +99,9 @@ export const Setting = () => {
 					<DropdownMenuGroup>
 						{user ? (
 							<DropdownMenuItem>
-								<button className='flex h-full w-full flex-col items-start justify-start gap-3 py-2 hover:brightness-90'>
+								<Link
+									href={"/me/profile"}
+									className='flex h-full w-full flex-col items-start justify-start gap-3 py-2 hover:brightness-90'>
 									<div className='flex items-center space-x-3'>
 										<Avatar>
 											<AvatarImage src={user?.image} />
@@ -110,7 +112,7 @@ export const Setting = () => {
 										<span className='max-w-32 truncate'>{user?.name}</span>
 									</div>
 									<p className='max-w-48 truncate'>{user?.email}</p>
-								</button>
+								</Link>
 							</DropdownMenuItem>
 						) : (
 							<DropdownMenuLabel className='py-3 text-base'>Setting</DropdownMenuLabel>

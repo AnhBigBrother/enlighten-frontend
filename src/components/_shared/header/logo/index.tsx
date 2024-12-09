@@ -27,17 +27,20 @@ export const Logo = () => {
 	const sideMenu = useRef<HTMLDivElement | null>(null);
 	const toggleSideMenu = (e?: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		if (sideMenu.current) {
-			if (e) {
-				if (sideMenu.current === e.target) {
-					sideMenu.current.classList.toggle("hidden");
-					sideMenu.current.classList.toggle("block");
-				}
-			} else {
-				sideMenu.current.classList.toggle("hidden");
-				sideMenu.current.classList.toggle("block");
-			}
+			// if (e) {
+			// 	if (sideMenu.current === e.target) {
+			// 		sideMenu.current.classList.toggle("hidden");
+			// 		sideMenu.current.classList.toggle("block");
+			// 	}
+			// } else {
+			// 	sideMenu.current.classList.toggle("hidden");
+			// 	sideMenu.current.classList.toggle("block");
+			// }
+			sideMenu.current.classList.toggle("hidden");
+			sideMenu.current.classList.toggle("block");
 		}
 	};
+
 	return (
 		<>
 			<aside
@@ -55,10 +58,12 @@ export const Logo = () => {
 							</Link>
 						</MenuItem>
 						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
+							<Link
+								href={"/explore"}
+								className='flex w-full flex-row space-x-4'>
 								<Telescope />
 								<p>Explore</p>
-							</div>
+							</Link>
 						</MenuItem>
 						<MenuItem>
 							<Link
@@ -73,22 +78,28 @@ export const Logo = () => {
 					<MenuGroup>
 						<MenuGroupHeader>You</MenuGroupHeader>
 						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
+							<Link
+								href={"/me/profile"}
+								className='flex w-full flex-row space-x-4'>
 								<SquareUser />
 								<p>Profile</p>
-							</div>
+							</Link>
 						</MenuItem>
 						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
+							<Link
+								href={"/me/posts"}
+								className='flex w-full flex-row space-x-4'>
 								<NotebookText />
 								<p>Your posts</p>
-							</div>
+							</Link>
 						</MenuItem>
 						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
+							<Link
+								href={"/me/saved"}
+								className='flex w-full flex-row space-x-4'>
 								<Bookmark />
 								<p>Saved</p>
-							</div>
+							</Link>
 						</MenuItem>
 					</MenuGroup>
 					<MenuSeperator />

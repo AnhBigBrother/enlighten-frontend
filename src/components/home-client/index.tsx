@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 
 const arr: TSortItem[] = [
 	{ label: "New", value: "new" },
-	{ label: "Voted", value: "top" },
+	{ label: "Top", value: "top" },
 	{ label: "Hot", value: "hot" },
 ];
 
