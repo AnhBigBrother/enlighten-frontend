@@ -16,6 +16,5 @@ export default async function Home() {
 		console.log(error);
 	});
 
-	console.log(serverLoadedPosts);
 	return <HomeClient serverLoadedPosts={serverLoadedPosts || []} />;
 }
