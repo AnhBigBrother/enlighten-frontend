@@ -18,7 +18,6 @@ const request = (path: string, method: Methods, options?: Options) => {
 		method,
 		credentials: "include", // allows cross-origin requests to include cookies and authentication headers.
 		headers: {
-			origin: FRONTEND_URL,
 			accept: "application/json",
 			"content-type": "application/json",
 			...(options?.authorization && { authorization: options.authorization }),
@@ -34,11 +33,16 @@ const handleTokenRotation = async (path: string, method: Methods, options?: Opti
 	const data1 = await res1.json();
 	if (!res1.ok) {
 		if (data1.error !== "unauthorized: access_token failed") throw data1;
-		const res2 = await request("/user/me/access_token", "GET", options);
+		const refresh_token = localStorage.getItem("refresh_token");
+		const res2 = await request("/user/me/access_token", "GET", {
+			searchParams: {
+				refresh_token: refresh_token || "",
+			},
+		});
 		const data2 = await res2.json();
 		if (!res2.ok) throw data2;
 		const access_token = data2.access_token;
-		options = { ...options, authorization: access_token };
+		options = { ...options, authorization: `Bearer ${access_token}` };
 		const res3 = await request(path, method, options);
 		const data3 = await res3.json();
 		if (!res3.ok) throw data3;

@@ -50,10 +50,12 @@ function SignupForm() {
 			return;
 		}
 		const access_token = result.access_token;
+		const refresh_token = result.refresh_token;
 		localStorage.setItem("access_token", access_token);
+		localStorage.setItem("refresh_token", refresh_token);
 		setError("");
 		setSuccess("Success!");
-		_get("user/me/session", { authorization: access_token || "" })
+		_get("user/me/session", { authorization: `Bearer ${access_token}` })
 			.then((userSession) => {
 				updateUser(userSession);
 				toast({

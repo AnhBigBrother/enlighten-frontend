@@ -34,7 +34,7 @@ const CreatePost = () => {
 		const access_token = localStorage.getItem("access_token");
 		setIsLoading(true);
 		await _post("post/create", {
-			authorization: access_token || "",
+			authorization: `Bearer ${access_token}`,
 			body: data,
 		})
 			.then((post) => {

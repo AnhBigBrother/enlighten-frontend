@@ -2,7 +2,7 @@
 
 /*<---validate login/signup form-input on server--->*/
 
-import { COOKIE_AGE } from "@/constants";
+import { BACKEND_URL, COOKIE_AGE } from "@/constants";
 import { _post } from "@/lib/fetch";
 import { LoginDTO, LoginSchema, SignupDTO, SignupSchema } from "@/schemas/auth";
 import { cookies } from "next/headers";
@@ -19,8 +19,20 @@ export const Login = async (dto: LoginDTO) => {
 		}
 		const data = await _post("/user/signin", { body: result.data });
 		const cookieStore = await cookies();
-		cookieStore.set("access_token", data.access_token, { maxAge: COOKIE_AGE });
-		cookieStore.set("refresh_token", data.refresh_token, { maxAge: COOKIE_AGE });
+		cookieStore.set("access_token", data.access_token, {
+			maxAge: COOKIE_AGE,
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			domain: BACKEND_URL,
+		});
+		cookieStore.set("refresh_token", data.refresh_token, {
+			maxAge: COOKIE_AGE,
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			domain: BACKEND_URL,
+		});
 		return data;
 	} catch (error: any) {
 		console.error(error);
@@ -42,8 +54,20 @@ export const Signup = async (dto: SignupDTO) => {
 		}
 		const data = await _post("/user/signup", { body: result.data });
 		const cookieStore = await cookies();
-		cookieStore.set("access_token", data.access_token, { maxAge: COOKIE_AGE });
-		cookieStore.set("refresh_token", data.refresh_token, { maxAge: COOKIE_AGE });
+		cookieStore.set("access_token", data.access_token, {
+			maxAge: COOKIE_AGE,
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			domain: BACKEND_URL,
+		});
+		cookieStore.set("refresh_token", data.refresh_token, {
+			maxAge: COOKIE_AGE,
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			domain: BACKEND_URL,
+		});
 		return data;
 	} catch (error: any) {
 		console.error(error);
