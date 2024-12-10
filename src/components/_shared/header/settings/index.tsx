@@ -48,6 +48,7 @@ export const Setting = () => {
 					description: "You have been loged out",
 				});
 				localStorage.removeItem("access_token");
+				localStorage.removeItem("refresh_token");
 			})
 			.catch((err) => {
 				console.error(err);

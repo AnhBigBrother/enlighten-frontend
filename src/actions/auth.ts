@@ -24,14 +24,12 @@ export const Login = async (dto: LoginDTO) => {
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
-			domain: BACKEND_URL,
 		});
 		cookieStore.set("refresh_token", data.refresh_token, {
 			maxAge: COOKIE_AGE,
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
-			domain: BACKEND_URL,
 		});
 		return data;
 	} catch (error: any) {
@@ -59,14 +57,12 @@ export const Signup = async (dto: SignupDTO) => {
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
-			domain: BACKEND_URL,
 		});
 		cookieStore.set("refresh_token", data.refresh_token, {
 			maxAge: COOKIE_AGE,
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
-			domain: BACKEND_URL,
 		});
 		return data;
 	} catch (error: any) {
