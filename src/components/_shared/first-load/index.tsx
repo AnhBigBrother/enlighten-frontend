@@ -11,7 +11,7 @@ export const FirstLoad = () => {
 	const { toast } = useToast();
 	useEffect(() => {
 		const access_token = localStorage.getItem("access_token");
-		_get("user/me/session", { authorization: access_token || "" })
+		_get("user/me/session", { authorization: `Bearer ${access_token}` })
 			.then((userSession: TUser) => {
 				updateUser(userSession);
 				toast({
