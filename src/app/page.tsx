@@ -12,8 +12,8 @@ export default async function Home() {
 			limit: "5",
 			offset: "0",
 		},
-	}).catch((error) => {
-		console.log(error);
+	}).catch((err) => {
+		console.log(err);
 	});
 
 	return <HomeClient serverLoadedPosts={serverLoadedPosts || []} />;

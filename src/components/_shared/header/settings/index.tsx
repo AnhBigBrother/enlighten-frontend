@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, User } from "lucide-react";
-import { _get, _post } from "@/lib/fetch";
+import { _post } from "@/lib/fetch";
 import useUserStore from "@/stores/user-store";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
@@ -40,23 +40,28 @@ export const Setting = () => {
 	const { setTheme, theme } = useTheme();
 	const { toast } = useToast();
 	const handleLogout = () => {
-		_post("api/v1/user/signout")
+		const access_token = localStorage.getItem("access_token") || "";
+		_post("api/v1/user/signout", {
+			authorization: `Bearer ${access_token}`,
+		})
 			.then((result) => {
-				resetUser();
 				toast({
 					title: "Loged out!",
 					description: "You have been loged out",
 				});
-				localStorage.removeItem("access_token");
-				localStorage.removeItem("refresh_token");
 			})
 			.catch((err) => {
 				console.error(err);
 				toast({
-					title: "Failed to log out",
-					description: "Something went wrong, try latter!",
+					title: "Error",
+					description: err.error || "Something went wrong, refresh page to continue.",
 					variant: "destructive",
 				});
+			})
+			.finally(() => {
+				resetUser();
+				localStorage.removeItem("access_token");
+				localStorage.removeItem("refresh_token");
 			});
 	};
 	return (
