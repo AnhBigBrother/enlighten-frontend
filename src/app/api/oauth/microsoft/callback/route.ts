@@ -44,8 +44,18 @@ export async function GET(req: NextRequest) {
 		/*<---set cookies and redirect--->*/
 		const { access_token, refresh_token } = res;
 		const cookieStore = await cookies();
-		cookieStore.set("access_token", access_token, { maxAge: COOKIE_AGE });
-		cookieStore.set("refresh_token", refresh_token, { maxAge: COOKIE_AGE });
+		cookieStore.set("access_token", access_token, {
+			maxAge: COOKIE_AGE,
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+		});
+		cookieStore.set("refresh_token", refresh_token, {
+			maxAge: COOKIE_AGE,
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+		});
 		return NextResponse.redirect(FRONTEND_URL);
 	} catch (error) {
 		console.error(error);
