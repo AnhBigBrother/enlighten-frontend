@@ -33,7 +33,7 @@ const CreatePost = () => {
 	const createPost = async (data: CreatePostDTO) => {
 		const access_token = localStorage.getItem("access_token");
 		setIsLoading(true);
-		await _post("post/create", {
+		await _post("api/v1/post/create", {
 			authorization: `Bearer ${access_token}`,
 			body: data,
 		})

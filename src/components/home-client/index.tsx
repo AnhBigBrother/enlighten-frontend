@@ -25,7 +25,7 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 	useEffect(() => {
 		if (hasIntersected && hasMore && !isLoading) {
 			setIsLoading(true);
-			_get("/post", {
+			_get("api/v1/post", {
 				searchParams: {
 					sort: sortedState.value,
 					limit: "5",
@@ -53,7 +53,7 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 		setIsLoading(true);
 		setOffset(0);
 		setHasMore(true);
-		_get("/post", {
+		_get("/api/v1/post", {
 			searchParams: {
 				sort: sortedState.value,
 				limit: "5",

@@ -40,7 +40,7 @@ export const Setting = () => {
 	const { setTheme, theme } = useTheme();
 	const { toast } = useToast();
 	const handleLogout = () => {
-		_post("user/signout")
+		_post("api/v1/user/signout")
 			.then((result) => {
 				resetUser();
 				toast({

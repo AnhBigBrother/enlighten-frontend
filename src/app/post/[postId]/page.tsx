@@ -14,7 +14,7 @@ type tParams = Promise<{ postId: string[] }>;
 
 const PostPage = async ({ params }: { params: tParams }) => {
 	const { postId } = await params;
-	const postData: TPostData = await _get(`/post/${postId}`).catch((error) => {
+	const postData: TPostData = await _get(`api/v1/post/${postId}`).catch((error) => {
 		return notFound();
 	});
 

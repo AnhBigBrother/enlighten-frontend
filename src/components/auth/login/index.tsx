@@ -52,7 +52,7 @@ function LoginForm() {
 		localStorage.setItem("refresh_token", refresh_token);
 		setError("");
 		setSuccess("Success!");
-		_get("user/me/session", { authorization: `Bearer ${access_token}` })
+		_get("api/v1/user/me/session", { authorization: `Bearer ${access_token}` })
 			.then((userSession) => {
 				updateUser(userSession);
 				toast({
