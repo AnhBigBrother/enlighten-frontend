@@ -41,6 +41,8 @@ const handleTokenRotation = async (path: string, method: Methods, options?: Opti
 		});
 		const data2 = await res2.json();
 		if (!res2.ok) throw data2;
+		localStorage.setItem("access_token", data2.access_token);
+		localStorage.setItem("refresh_token", data2.refresh_token);
 		const access_token = data2.access_token;
 		options = { ...options, authorization: `Bearer ${access_token}` };
 		const res3 = await request(path, method, options);

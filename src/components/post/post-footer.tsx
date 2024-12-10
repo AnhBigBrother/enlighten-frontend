@@ -26,7 +26,7 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
-			_get(`/post/${id}/checkvoted`)
+			_get(`/api/v1/post/${id}/checkvoted`)
 				.then(({ voted }) => {
 					setHasVoted(voted);
 				})
@@ -39,7 +39,7 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	const handleClickUpVote = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
-		_post(`/post/${id}/upvote`)
+		_post(`api/v1/post/${id}/upvote`)
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -64,7 +64,7 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	const handleClickDownVote = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
-		_post(`/post/${id}/downvote`)
+		_post(`api/v1/post/${id}/downvote`)
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");

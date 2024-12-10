@@ -17,7 +17,7 @@ export const Login = async (dto: LoginDTO) => {
 				error: "Validation error",
 			};
 		}
-		const data = await _post("/user/signin", { body: result.data });
+		const data = await _post("api/v1/api/v1/user/signin", { body: result.data });
 		const cookieStore = await cookies();
 		cookieStore.set("access_token", data.access_token, {
 			maxAge: COOKIE_AGE,
@@ -50,7 +50,7 @@ export const Signup = async (dto: SignupDTO) => {
 				error: "Validation error",
 			};
 		}
-		const data = await _post("/user/signup", { body: result.data });
+		const data = await _post("api/v1/api/v1/user/signup", { body: result.data });
 		const cookieStore = await cookies();
 		cookieStore.set("access_token", data.access_token, {
 			maxAge: COOKIE_AGE,

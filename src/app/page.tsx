@@ -6,7 +6,7 @@ import { HomeClient } from "@/components/home-client";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-	const serverLoadedPosts: TPostData[] = await _get("/post", {
+	const serverLoadedPosts: TPostData[] = await _get("api/v1/post", {
 		searchParams: {
 			sort: "new",
 			limit: "5",

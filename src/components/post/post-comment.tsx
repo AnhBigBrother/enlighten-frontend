@@ -35,7 +35,7 @@ const CommentReply = ({
 	const user = useUserStore.use.user();
 	useEffect(() => {
 		if (user) {
-			_get(`/post/${postId}/comment/${replyData.id}/checkvoted`)
+			_get(`/api/v1/post/${postId}/comment/${replyData.id}/checkvoted`)
 				.then(({ voted }) => {
 					setHasVoted(voted);
 				})
@@ -47,7 +47,7 @@ const CommentReply = ({
 	}, [user]);
 
 	const handleUpVoteComment = () => {
-		_post(`/post/${postId}/comment/${replyData.id}/upvote`)
+		_post(`api/v1/post/${postId}/comment/${replyData.id}/upvote`)
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -70,7 +70,7 @@ const CommentReply = ({
 			});
 	};
 	const handleDownVoteComment = () => {
-		_post(`/post/${postId}/comment/${replyData.id}/downvote`)
+		_post(`api/v1/post/${postId}/comment/${replyData.id}/downvote`)
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");
@@ -163,7 +163,7 @@ const ReplyWritter = ({
 
 	const handleSubmitComment = (e: React.MouseEvent) => {
 		e.preventDefault();
-		_post(`/post/${postId}/comment/${parentCommentId}/reply`, {
+		_post(`api/v1/post/${postId}/comment/${parentCommentId}/reply`, {
 			body: {
 				reply: reply,
 			},
@@ -241,7 +241,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
-			_get(`/post/${postId}/comment/${commentData.id}/checkvoted`)
+			_get(`/api/v1/post/${postId}/comment/${commentData.id}/checkvoted`)
 				.then(({ voted }) => {
 					setHasVoted(voted);
 				})
@@ -255,7 +255,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	useEffect(() => {
 		if (showReplies) {
 			setIsLoadingReplies(true);
-			_get(`/post/${postId}/comment/${commentData.id}`)
+			_get(`/api/v1/post/${postId}/comment/${commentData.id}`)
 				.then((reps: TComment[]) => {
 					setReplies(reps);
 				})
@@ -265,7 +265,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	}, [showReplies]);
 
 	const handleUpVoteComment = () => {
-		_post(`/post/${postId}/comment/${commentData.id}/upvote`)
+		_post(`api/v1/post/${postId}/comment/${commentData.id}/upvote`)
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -288,7 +288,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 			});
 	};
 	const handleDownVoteComment = () => {
-		_post(`/post/${postId}/comment/${commentData.id}/downvote`)
+		_post(`api/v1/post/${postId}/comment/${commentData.id}/downvote`)
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");
@@ -436,7 +436,7 @@ const CommentWritter = ({
 
 	const handleSubmitComment = (e: React.MouseEvent) => {
 		e.preventDefault();
-		_post(`/post/${postId}/comment`, {
+		_post(`api/v1/post/${postId}/comment`, {
 			body: {
 				comment: comment,
 			},
@@ -513,7 +513,7 @@ const PostComment = ({ postId }: { postId: string }) => {
 	useEffect(() => {
 		if (hasIntersected && hasMore && !isLoading) {
 			setIsLoading(true);
-			_get(`/post/${postId}/comment`, {
+			_get(`/api/v1/post/${postId}/comment`, {
 				searchParams: {
 					offset: `${offset}`,
 					limit: "5",
