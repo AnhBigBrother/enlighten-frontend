@@ -61,6 +61,10 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 			},
 		})
 			.then((posts: TPostData[]) => {
+				if (posts.length === 0) {
+					setHasMore(false);
+					return;
+				}
 				setPosts(posts);
 				setOffset((pre) => pre + posts.length);
 			})
