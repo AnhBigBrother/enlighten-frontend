@@ -113,7 +113,7 @@ export const Logo = () => {
 						</MenuItem>
 						<MenuItem>
 							<a
-								href='https://bigbruhh-messenger.vercel.app'
+								href='https://messenger-hehe.vercel.app'
 								target='_blank'
 								className='flex w-full flex-row space-x-4'>
 								<MessageCircleMore />
