@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { ProgressLink } from "@/components/ui/progress-link";
 import React from "react";
 
 const FormFooter = ({ href, label }: { href: string; label: string }) => {
@@ -9,7 +9,7 @@ const FormFooter = ({ href, label }: { href: string; label: string }) => {
 			className='w-full font-normal'
 			size={"sm"}
 			asChild>
-			<Link href={href}>{label}</Link>
+			<ProgressLink href={href}>{label}</ProgressLink>
 		</Button>
 	);
 };

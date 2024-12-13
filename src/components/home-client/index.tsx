@@ -5,8 +5,9 @@ import { Spinner } from "@/components/_shared/spinner";
 import { PostCard } from "@/components/post/post-card";
 import { useOnScrollIn } from "@/hooks/use-on-scroll-in";
 import { _get } from "@/lib/fetch";
+import useProgressStore from "@/stores/progress-store";
 import { TPostData } from "@/types/post";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const arr: TSortItem[] = [
 	{ label: "New", value: "new" },
@@ -21,6 +22,9 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [lastComponentRef, hasIntersected] = useOnScrollIn();
+	const updateProgress = useProgressStore.use.update();
+	const resetProgress = useProgressStore.use.reset();
+	const mountedFirstTime = useRef(true);
 
 	useEffect(() => {
 		if (hasIntersected && hasMore && !isLoading) {
@@ -50,9 +54,14 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 	}, [hasIntersected, hasMore]);
 
 	useEffect(() => {
+		if (mountedFirstTime.current) {
+			mountedFirstTime.current = false;
+			return;
+		}
 		setIsLoading(true);
 		setOffset(0);
 		setHasMore(true);
+		updateProgress(50);
 		_get("/api/v1/post", {
 			searchParams: {
 				sort: sortedState.value,
@@ -73,6 +82,10 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 			})
 			.finally(() => {
 				setIsLoading(false);
+				updateProgress(100);
+				setTimeout(() => {
+					resetProgress();
+				}, 300);
 			});
 	}, [sortedState]);
 

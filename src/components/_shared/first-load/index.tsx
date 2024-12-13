@@ -1,14 +1,28 @@
 "use client";
 
+import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { _get } from "@/lib/fetch";
+import useProgressStore from "@/stores/progress-store";
 import useUserStore, { TUser } from "@/stores/user-store";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 export const FirstLoad = () => {
+	const progressValue = useProgressStore.use.progress();
+	const updateProgress = useProgressStore.use.update();
+	const resetProgress = useProgressStore.use.reset();
 	const updateUser = useUserStore.use.update();
 	const resetUser = useUserStore.use.reset();
 	const { toast } = useToast();
+	const pathName = usePathname();
+
+	useEffect(() => {
+		updateProgress(66);
+		setTimeout(() => updateProgress(100), 300);
+		setTimeout(() => resetProgress(), 500);
+	}, [pathName]);
+
 	useEffect(() => {
 		const access_token = localStorage.getItem("access_token");
 		_get("api/v1/user/me/session", { authorization: `Bearer ${access_token}` })
@@ -25,5 +39,10 @@ export const FirstLoad = () => {
 			});
 	}, []);
 
-	return null;
+	return (
+		<Progress
+			className='fixed left-0 top-0 z-50 h-1 w-full rounded-none bg-transparent'
+			value={progressValue}
+		/>
+	);
 };
