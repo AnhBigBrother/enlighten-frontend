@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ProgressLink } from "@/components/ui/progress-link";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import useRecentStore, { TRecent } from "@/stores/recent-store";
 import { ArrowBigDown, ArrowBigUp, MessageSquare, User } from "lucide-react";
 import React from "react";
@@ -12,7 +13,7 @@ export const Recents = () => {
 	const clear = useRecentStore.use.reset();
 	return (
 		<aside className='sticky top-16 hidden h-[calc(100vh-4rem)] w-80 flex-shrink-0 overflow-auto py-5 lg:block'>
-			<div className='rounded-xl bg-secondary p-3 text-sm'>
+			<ScrollArea className='h-full w-full rounded-xl bg-secondary/50 p-3 text-sm'>
 				<div className='flex w-full items-center justify-between py-1'>
 					<h3 className='px-2 font-bold'>RECENTS</h3>
 					<Button
@@ -28,7 +29,7 @@ export const Recents = () => {
 						key={data.id}
 					/>
 				))}
-			</div>
+			</ScrollArea>
 		</aside>
 	);
 };
