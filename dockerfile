@@ -19,7 +19,8 @@ WORKDIR /app
 RUN mkdir .next
 
 COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/static ./.next/static
 
-CMD ["node", "server.js"]
+
+EXPOSE 3000
+
+ENTRYPOINT ["node", "server.js"]
