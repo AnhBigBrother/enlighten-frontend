@@ -12,23 +12,25 @@ export const Recents = () => {
 	const recents = useRecentStore.use.recents();
 	const clear = useRecentStore.use.reset();
 	return (
-		<aside className='sticky top-16 hidden h-[calc(100vh-4rem)] w-80 flex-shrink-0 overflow-auto py-5 lg:block'>
-			<ScrollArea className='h-full w-full rounded-xl bg-secondary/50 p-3 text-sm'>
-				<div className='flex w-full items-center justify-between py-1'>
-					<h3 className='px-2 font-bold'>RECENTS</h3>
-					<Button
-						variant='link'
-						className='text-blue-500'
-						onClick={() => clear()}>
-						Clear
-					</Button>
+		<aside className='sticky top-16 hidden h-[calc(100vh-4rem)] w-80 flex-shrink-0 py-5 lg:block'>
+			<ScrollArea className='h-full w-full rounded-xl'>
+				<div className='h-fit max-h-full w-full rounded-xl bg-secondary p-3 text-sm'>
+					<div className='flex w-full items-center justify-between py-1'>
+						<h3 className='px-2 font-bold'>RECENTS</h3>
+						<Button
+							variant='link'
+							className='text-blue-500'
+							onClick={() => clear()}>
+							Clear
+						</Button>
+					</div>
+					{recents.map((data) => (
+						<RecentPostCard
+							data={data}
+							key={data.id}
+						/>
+					))}
 				</div>
-				{recents.map((data) => (
-					<RecentPostCard
-						data={data}
-						key={data.id}
-					/>
-				))}
 			</ScrollArea>
 		</aside>
 	);
