@@ -27,6 +27,7 @@ const request = (path: string, method: Methods, options?: Options) => {
 			options?.body && { body: JSON.stringify(options.body) }),
 	});
 };
+
 /*<---handle token rotation--->*/
 const handleTokenRotation = async (path: string, method: Methods, options?: Options) => {
 	const res1 = await request(path, method, options);
@@ -52,7 +53,7 @@ const handleTokenRotation = async (path: string, method: Methods, options?: Opti
 	return data1;
 };
 
-/*<---export--->*/
+/*<---client fetch funcion--->*/
 export const _get = async (path: string, options?: Options) =>
 	handleTokenRotation(path, "GET", options);
 export const _post = (path: string, options?: Options) =>
