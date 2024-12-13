@@ -25,7 +25,6 @@ import { Bell, User } from "lucide-react";
 import { _post } from "@/lib/fetch";
 import useUserStore from "@/stores/user-store";
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
 import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTheme } from "next-themes";
@@ -33,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { NotebookPen } from "lucide-react";
 import React from "react";
 import { IconButton } from "@/components/ui/icon-button";
+import { ProgressLink } from "@/components/ui/progress-link";
 
 export const Setting = () => {
 	const user = useUserStore.use.user();
@@ -67,12 +67,12 @@ export const Setting = () => {
 	return (
 		<menu className='flex flex-row items-center space-x-1 md:space-x-3'>
 			<div className='flex flex-row items-center'>
-				<Link href={"/create"}>
+				<ProgressLink href={"/create"}>
 					<IconButton>
 						<NotebookPen />
 						<p className='ml-2 hidden sm:inline-block'>Write</p>
 					</IconButton>
-				</Link>
+				</ProgressLink>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<IconButton>
@@ -105,7 +105,7 @@ export const Setting = () => {
 					<DropdownMenuGroup>
 						{user ? (
 							<DropdownMenuItem>
-								<Link
+								<ProgressLink
 									href={"/me/profile"}
 									className='flex h-full w-full flex-col items-start justify-start gap-3 py-2 hover:brightness-90'>
 									<div className='flex items-center space-x-3'>
@@ -118,7 +118,7 @@ export const Setting = () => {
 										<span className='max-w-32 truncate'>{user?.name}</span>
 									</div>
 									<p className='max-w-48 truncate'>{user?.email}</p>
-								</Link>
+								</ProgressLink>
 							</DropdownMenuItem>
 						) : (
 							<DropdownMenuLabel className='py-3 text-base'>Setting</DropdownMenuLabel>
@@ -232,18 +232,18 @@ export const Setting = () => {
 						) : (
 							<>
 								<DropdownMenuItem asChild>
-									<Link
+									<ProgressLink
 										className='h-full w-full'
 										href='/login'>
 										Login
-									</Link>
+									</ProgressLink>
 								</DropdownMenuItem>
 								<DropdownMenuItem asChild>
-									<Link
+									<ProgressLink
 										className='h-full w-full'
 										href='/signup'>
 										Sign up
-									</Link>
+									</ProgressLink>
 								</DropdownMenuItem>
 							</>
 						)}

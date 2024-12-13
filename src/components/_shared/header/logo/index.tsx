@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import React, { useRef } from "react";
 import {
 	Bookmark,
@@ -22,6 +21,7 @@ import { MenuGroup, MenuGroupHeader, MenuItem, MenuSeperator } from "@/component
 import { CollapsibleContent, CollapsibleMenu } from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ProgressLink } from "@/components/ui/progress-link";
 
 export const Logo = () => {
 	const sideMenu = useRef<HTMLDivElement | null>(null);
@@ -50,56 +50,56 @@ export const Logo = () => {
 				<ScrollArea className='flex h-full w-64 flex-col items-start justify-start bg-background py-3 pl-3 pr-3 xl:w-72 xl:pr-5'>
 					<MenuGroup>
 						<MenuItem>
-							<Link
+							<ProgressLink
 								href={"/"}
 								className='flex w-full flex-row space-x-4'>
 								<House />
 								<p>Home</p>
-							</Link>
+							</ProgressLink>
 						</MenuItem>
 						<MenuItem>
-							<Link
+							<ProgressLink
 								href={"/explore"}
 								className='flex w-full flex-row space-x-4'>
 								<Telescope />
 								<p>Explore</p>
-							</Link>
+							</ProgressLink>
 						</MenuItem>
 						<MenuItem>
-							<Link
+							<ProgressLink
 								href={"/create"}
 								className='flex w-full flex-row space-x-4'>
 								<NotebookPen />
 								<p>Write post</p>
-							</Link>
+							</ProgressLink>
 						</MenuItem>
 					</MenuGroup>
 					<MenuSeperator />
 					<MenuGroup>
 						<MenuGroupHeader>You</MenuGroupHeader>
 						<MenuItem>
-							<Link
+							<ProgressLink
 								href={"/me/profile"}
 								className='flex w-full flex-row space-x-4'>
 								<SquareUser />
 								<p>Profile</p>
-							</Link>
+							</ProgressLink>
 						</MenuItem>
 						<MenuItem>
-							<Link
+							<ProgressLink
 								href={"/me/posts"}
 								className='flex w-full flex-row space-x-4'>
 								<NotebookText />
 								<p>Your posts</p>
-							</Link>
+							</ProgressLink>
 						</MenuItem>
 						<MenuItem>
-							<Link
+							<ProgressLink
 								href={"/me/saved"}
 								className='flex w-full flex-row space-x-4'>
 								<Bookmark />
 								<p>Saved</p>
-							</Link>
+							</ProgressLink>
 						</MenuItem>
 					</MenuGroup>
 					<MenuSeperator />
@@ -198,7 +198,7 @@ export const Logo = () => {
 					onClick={() => toggleSideMenu()}>
 					<Menu />
 				</IconButton>
-				<Link
+				<ProgressLink
 					href={"/"}
 					className='flex flex-shrink-0 flex-row items-center gap-2'>
 					<Image
@@ -216,7 +216,7 @@ export const Logo = () => {
 						className='hidden h-8 w-8 rounded-md dark:block'
 					/>
 					<h1 className='hidden text-2xl font-bold sm:inline-block'>Enlighten</h1>
-				</Link>
+				</ProgressLink>
 			</div>
 		</>
 	);

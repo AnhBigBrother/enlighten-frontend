@@ -2,9 +2,9 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ProgressLink } from "@/components/ui/progress-link";
 import useRecentStore, { TRecent } from "@/stores/recent-store";
 import { ArrowBigDown, ArrowBigUp, MessageSquare, User } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 
 export const Recents = () => {
@@ -39,7 +39,7 @@ const RecentPostCard = ({ data }: { data: TRecent }) => {
 			<div className='p-3'>
 				<div className='w-full border-t border-muted-foreground'></div>
 			</div>
-			<Link
+			<ProgressLink
 				href={`/post/${data.id}`}
 				className='flex flex-col p-2'>
 				<div className='mb-1 flex w-full flex-row items-center space-x-2'>
@@ -68,7 +68,7 @@ const RecentPostCard = ({ data }: { data: TRecent }) => {
 						<span>{data.comment_count}</span>
 					</div>
 				</div>
-			</Link>
+			</ProgressLink>
 		</>
 	);
 };
