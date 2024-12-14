@@ -16,7 +16,7 @@ type CollapsibleMenuProps = {
 	children: React.ReactNode;
 	className?: string;
 	open?: boolean;
-	label?: string;
+	label?: React.ReactNode;
 };
 
 const CollapsibleMenu = React.forwardRef<HTMLDivElement, CollapsibleMenuProps>(
@@ -27,8 +27,7 @@ const CollapsibleMenu = React.forwardRef<HTMLDivElement, CollapsibleMenuProps>(
 				open={isOpen}
 				className={cn("w-full", className)}
 				ref={ref}>
-				<div className='flex flex-row items-center justify-between px-2 py-1'>
-					{label && <h4 className='font-semibold'>{label}</h4>}
+				<div className='flex flex-row items-center justify-between py-1'>
 					<CollapsibleTrigger
 						asChild
 						onClick={(e) => {
@@ -36,13 +35,16 @@ const CollapsibleMenu = React.forwardRef<HTMLDivElement, CollapsibleMenuProps>(
 							e.stopPropagation();
 							setisOpen((pre) => !pre);
 						}}>
-						<IconButton className='ml-2 rounded-md p-1'>
-							<ChevronDown
-								className={cn("h-5 w-5", {
-									"rotate-180": isOpen,
-								})}
-							/>
-						</IconButton>
+						<div className='flex w-full cursor-pointer items-center justify-between hover:underline'>
+							{label}
+							<IconButton className='ml-2 rounded-md p-1'>
+								<ChevronDown
+									className={cn("h-5 w-5", {
+										"rotate-180": isOpen,
+									})}
+								/>
+							</IconButton>
+						</div>
 					</CollapsibleTrigger>
 				</div>
 				{children}

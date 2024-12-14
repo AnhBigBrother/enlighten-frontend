@@ -123,7 +123,7 @@ export const Logo = () => {
 					</MenuGroup>
 					<MenuSeperator />
 					<MenuGroup>
-						<CollapsibleMenu label='Games'>
+						<CollapsibleMenu label={<h4 className='ml-1 font-semibold'>Game</h4>}>
 							<CollapsibleContent>
 								<MenuItem>
 									<div className='flex w-full flex-row space-x-4'>
@@ -142,7 +142,7 @@ export const Logo = () => {
 					</MenuGroup>
 					<MenuSeperator />
 					<MenuGroup>
-						<CollapsibleMenu label='Subscriptions'>
+						<CollapsibleMenu label={<h4 className='ml-1 font-semibold'>Subscriptions</h4>}>
 							<CollapsibleContent className='mt-1'>
 								<div className='flex w-full flex-row items-center space-x-2 p-1'>
 									<Avatar className='h-9 w-9'>

@@ -19,6 +19,7 @@ type Props = {
 
 const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Props) => {
 	const user = useUserStore.use.user();
+	const [isVoting, setIsVoting] = useState<boolean>(false);
 	const [hasVoted, setHasVoted] = useState<"up" | "down" | "none">("none");
 	const [upVoted, setUpVoted] = useState<number>(up_voted);
 	const [downVoted, setDownVoted] = useState<number>(down_voted);
@@ -39,6 +40,7 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	const handleClickUpVote = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
+		setIsVoting(true);
 		_post(`api/v1/post/${id}/upvote`)
 			.then(() => {
 				if (hasVoted === "up") {
@@ -59,11 +61,13 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 					description: err.error || "Error when upvoting post.",
 					variant: "destructive",
 				});
-			});
+			})
+			.finally(() => setIsVoting(false));
 	};
 	const handleClickDownVote = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
+		setIsVoting(true);
 		_post(`api/v1/post/${id}/downvote`)
 			.then(() => {
 				if (hasVoted === "down") {
@@ -84,7 +88,8 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 					description: err.error || "Error when downvoting post.",
 					variant: "destructive",
 				});
-			});
+			})
+			.finally(() => setIsVoting(false));
 	};
 	const handleClickSave = () => {};
 	const handleClickShare = () => {};
@@ -93,9 +98,10 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 			<div className='flex h-9 w-full flex-row items-center justify-start space-x-2 text-sm'>
 				<div className='flex h-full flex-row items-center rounded-xl border'>
 					<button
+						disabled={isVoting}
 						onClick={(e) => handleClickUpVote(e)}
 						className={cn(
-							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent",
+							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent disabled:text-muted-foreground",
 							{
 								"text-blue-500": user && hasVoted === "up",
 							},
@@ -104,9 +110,10 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 						<span>{upVoted}</span>
 					</button>
 					<button
+						disabled={isVoting}
 						onClick={(e) => handleClickDownVote(e)}
 						className={cn(
-							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent",
+							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent disabled:text-muted-foreground",
 							{
 								"text-blue-500": user && hasVoted === "down",
 							},

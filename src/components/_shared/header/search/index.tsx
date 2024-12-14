@@ -25,7 +25,7 @@ export const Search = () => {
 					onChange={(e) => setSearch(e.target.value)}></input>
 				{search && (
 					<button
-						className='rounded-full bg-border p-1'
+						className='rounded-full bg-muted-foreground/20 p-1'
 						type='button'
 						onClick={() => setSearch("")}>
 						<FaXmark className='h-3 w-3' />
