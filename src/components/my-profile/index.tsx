@@ -41,7 +41,6 @@ const MyProfile = ({ userData }: { userData: TUserInfo }) => {
 	const onSubmit = async (data: MyProfileDTO) => {
 		setIsPending(true);
 		_post("api/v1/user/me", {
-			authorization: `Bearer ${localStorage.getItem("access_token")}`,
 			body: {
 				name: data.name,
 				image: data.image,
@@ -49,12 +48,11 @@ const MyProfile = ({ userData }: { userData: TUserInfo }) => {
 				bio: data.bio,
 			},
 		})
-			.then(({ access_token }: { access_token: string }) => {
+			.then(() => {
 				toast({
 					title: "Success",
 					description: "Your profile has been updated successfully.",
 				});
-				localStorage.setItem("access_token", access_token);
 				router.push("/");
 			})
 			.catch((err) => {

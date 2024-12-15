@@ -40,14 +40,14 @@ export const Setting = () => {
 	const { setTheme, theme } = useTheme();
 	const { toast } = useToast();
 	const handleLogout = () => {
-		const access_token = localStorage.getItem("access_token") || "";
-		_post("api/v1/user/signout", {
-			authorization: `Bearer ${access_token}`,
-		})
+		_post("api/v1/user/signout")
 			.then((result) => {
 				toast({
-					title: "Loged out!",
+					title: result.message || "Loged out!",
 					description: "You have been loged out",
+				});
+				fetch(`/api/setCookies?access_token=&refresh_token=`, {
+					method: "DELETE",
 				});
 			})
 			.catch((err) => {
@@ -60,8 +60,6 @@ export const Setting = () => {
 			})
 			.finally(() => {
 				resetUser();
-				localStorage.removeItem("access_token");
-				localStorage.removeItem("refresh_token");
 			});
 	};
 	return (

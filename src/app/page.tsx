@@ -1,12 +1,12 @@
 import React from "react";
 import { TPostData } from "@/types/post";
 import { HomeClient } from "@/components/home-client";
-import { Fetch } from "@/actions/fetch";
+import { _get } from "@/lib/fetch";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-	const serverLoadedPosts: TPostData[] = await Fetch("api/v1/post", "GET", {
+	const serverLoadedPosts: TPostData[] = await _get("api/v1/post", {
 		searchParams: {
 			sort: "new",
 			limit: "5",

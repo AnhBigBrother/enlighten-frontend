@@ -1,6 +1,5 @@
 "use client";
 
-import { Login } from "@/actions/auth";
 import { FormError, FormSuccess } from "@/components/auth/auth-form/form-notification";
 import { FormWrapper } from "@/components/auth/auth-form/form-wrapper";
 import { Button } from "@/components/ui/button";
@@ -13,18 +12,13 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input, PasswordInput } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { _get } from "@/lib/fetch";
+import { _get, _post } from "@/lib/fetch";
 import { LoginDTO, LoginSchema } from "@/schemas/auth";
-import useUserStore from "@/stores/user-store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 function LoginForm() {
-	const router = useRouter();
-	const { toast } = useToast();
 	const [isPending, setIsPending] = useState<boolean>(false);
 	const [success, setSuccess] = useState<string>("");
 	const [error, setError] = useState<string>("");
@@ -35,38 +29,20 @@ function LoginForm() {
 			password: "",
 		},
 	});
-	const updateUser = useUserStore.use.update();
 	const onSubmit = async (data: LoginDTO) => {
 		setIsPending(true);
 		setError("");
-		const result = await Login(data);
-		if (result.error) {
+		const { access_token, refresh_token } = await _post("api/v1/user/signin", {
+			body: data,
+		}).catch((err) => {
 			setSuccess("");
-			setError(result.error);
+			setError(err.error);
 			setIsPending(false);
 			return;
-		}
-		const access_token = result.access_token;
-		const refresh_token = result.refresh_token;
-		localStorage.setItem("access_token", access_token);
-		localStorage.setItem("refresh_token", refresh_token);
+		});
 		setError("");
 		setSuccess("Success!");
-		_get("api/v1/user/me/session", { authorization: `Bearer ${access_token}` })
-			.then((userSession) => {
-				updateUser(userSession);
-				toast({
-					title: "Welcome!",
-					description: `You are loged in as ${userSession.name}`,
-				});
-			})
-			.catch((err) => {
-				console.error(err);
-			})
-			.finally(() => {
-				router.push("/");
-				setIsPending(false);
-			});
+		window.location.href = `/api/setCookies?access_token=${access_token}&refresh_token=${refresh_token}`;
 	};
 
 	return (
