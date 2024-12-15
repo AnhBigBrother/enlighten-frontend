@@ -7,8 +7,8 @@ import React from "react";
 
 const ProfilePage = async () => {
 	const cookieStore = await cookies();
-	const access_token = cookieStore.get("access_token");
-	console.log(access_token);
+	const access_token = cookieStore.get("access_token")?.value;
+
 	const userData: TUserInfo = await fetch(`${BACKEND_DOMAIN}/api/v1/user/me`, {
 		headers: {
 			authorization: `Bearer ${access_token}`,
