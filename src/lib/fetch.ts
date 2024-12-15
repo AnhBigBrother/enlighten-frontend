@@ -1,3 +1,5 @@
+"use client";
+
 import { BACKEND_DOMAIN } from "@/constants";
 
 type Methods = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -32,17 +34,28 @@ const request = (path: string, method: Methods, options?: Options) => {
 const handleTokenRotation = async (path: string, method: Methods, options?: Options) => {
 	const res1 = await request(path, method, options);
 	const data1 = await res1.json();
+
 	if (!res1.ok) {
 		if (data1.error !== "unauthorized: access_token failed") throw data1;
+
 		const res2 = await request("api/v1/user/me/access_token", "GET");
 		const data2 = await res2.json();
+
 		if (!res2.ok || !data2.access_token || !data2.refresh_token) throw data2;
-		options = { ...options, authorization: `Bearer ${data2.access_token}` };
+		const { access_token, refresh_token } = data2;
+
+		options = { ...options, authorization: `Bearer ${access_token}` };
 		const res3 = await request(path, method, options);
 		const data3 = await res3.json();
+
 		if (!res3.ok) throw data3;
+
+		fetch(`/api/setCookies?access_token=${access_token}&refresh_token=${refresh_token}`, {
+			method: "POST",
+		});
 		return data3;
 	}
+
 	return data1;
 };
 

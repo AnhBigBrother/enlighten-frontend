@@ -37,6 +37,22 @@ export async function GET(req: NextRequest) {
 	}
 }
 
+export async function POST(req: NextRequest) {
+	const searchParams = req.nextUrl.searchParams;
+	const cookieStore = await cookies();
+	for (let pair of searchParams.entries()) {
+		const [key, value] = pair;
+		cookieStore.set(key, value, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			domain: FRONTEND_DOMAIN,
+			maxAge: COOKIE_AGE,
+		});
+	}
+	return NextResponse.json({ message: "All cookies have been set" });
+}
+
 export async function DELETE(req: NextRequest) {
 	const searchParams = req.nextUrl.searchParams;
 	const redirect_to = searchParams.get("redirect_to");
