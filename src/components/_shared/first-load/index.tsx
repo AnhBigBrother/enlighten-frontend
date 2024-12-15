@@ -6,7 +6,7 @@ import { _get } from "@/lib/fetch";
 import useProgressStore from "@/stores/progress-store";
 import useUserStore, { TUser } from "@/stores/user-store";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export const FirstLoad = () => {
 	const progressValue = useProgressStore.use.progress();
@@ -24,17 +24,24 @@ export const FirstLoad = () => {
 	}, [pathName]);
 
 	useEffect(() => {
-		const access_token = localStorage.getItem("access_token");
-		_get("api/v1/user/me/session", { authorization: `Bearer ${access_token}` })
+		_get("api/v1/user/me/session")
 			.then((userSession: TUser) => {
+				if (!userSession) {
+					throw new Error("Session not found.");
+				}
 				updateUser(userSession);
 				toast({
 					title: "Welcome!",
-					description: `You are loged in as ${userSession!.name}`,
+					description: `You are loged in as ${userSession.name}`,
 				});
 			})
 			.catch((err) => {
 				resetUser();
+				toast({
+					title: "Error!",
+					description: err.error || "Something went wrong, try latter",
+					variant: "destructive",
+				});
 				console.error(err);
 			});
 	}, []);

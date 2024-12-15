@@ -1,11 +1,11 @@
 "use server";
 
-import { Fetch } from "@/actions/fetch";
 import { PostClient } from "@/components/post/post-client";
 import { PostComment } from "@/components/post/post-comment";
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
+import { _get } from "@/lib/fetch";
 import { TPostData } from "@/types/post";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -14,7 +14,7 @@ type tParams = Promise<{ postId: string[] }>;
 
 const PostPage = async ({ params }: { params: tParams }) => {
 	const { postId } = await params;
-	const postData: TPostData = await Fetch(`api/v1/post/${postId}`, "GET").catch((error) => {
+	const postData: TPostData = await _get(`api/v1/post/${postId}`).catch((error) => {
 		return notFound();
 	});
 
