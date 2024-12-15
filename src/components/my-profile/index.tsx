@@ -66,7 +66,7 @@ const MyProfile = ({ userData }: { userData: TUserInfo }) => {
 			.finally(() => setIsPending(false));
 	};
 	return (
-		<div className='mt-10 flex justify-center'>
+		<div className='my-8 flex justify-center'>
 			<Form {...form}>
 				<form
 					className='flex w-full max-w-[45rem] flex-col gap-6 rounded-xl border p-5 sm:p-10'
