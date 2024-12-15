@@ -10,31 +10,30 @@ export async function GET(req: NextRequest) {
 
 	for (let pair of searchParams.entries()) {
 		const [key, value] = pair;
-		if (key === redirect_to) {
+		console.log(key, value);
+		if (key === "redirect_to") {
 			continue;
 		}
-		console.log(key, value);
 		cookieStore.set(key, value, {
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
-			domain: FRONTEND_DOMAIN,
 			maxAge: COOKIE_AGE,
 		});
 	}
 
 	if (!redirect_to) {
-		return NextResponse.redirect(FRONTEND_DOMAIN);
+		return NextResponse.redirect(FRONTEND_DOMAIN, 303);
 	}
 
 	try {
 		const redirect_url = new URL(redirect_to);
 		if (redirect_url.pathname === req.nextUrl.pathname) {
-			return NextResponse.redirect(FRONTEND_DOMAIN);
+			return NextResponse.redirect(FRONTEND_DOMAIN, 303);
 		}
-		return NextResponse.redirect(redirect_url);
+		return NextResponse.redirect(redirect_url, 303);
 	} catch (error) {
-		return NextResponse.redirect(FRONTEND_DOMAIN);
+		return NextResponse.redirect(FRONTEND_DOMAIN, 303);
 	}
 }
 
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
-			domain: FRONTEND_DOMAIN,
 			maxAge: COOKIE_AGE,
 		});
 	}
@@ -56,35 +54,15 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
 	const searchParams = req.nextUrl.searchParams;
-	const redirect_to = searchParams.get("redirect_to");
-
 	const cookieStore = await cookies();
-
 	for (let pair of searchParams.entries()) {
 		const [key, value] = pair;
-		if (key === redirect_to) {
-			continue;
-		}
 		cookieStore.set(key, value, {
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
-			domain: FRONTEND_DOMAIN,
 			maxAge: -1,
 		});
 	}
-
-	if (!redirect_to) {
-		return NextResponse.json({ message: "Cookies deleted" });
-	}
-
-	try {
-		const redirect_url = new URL(redirect_to);
-		if (redirect_url.pathname === req.nextUrl.pathname) {
-			return NextResponse.json({ message: "Cookies deleted" });
-		}
-		return NextResponse.redirect(redirect_url);
-	} catch (error) {
-		return NextResponse.json({ message: "Cookies deleted" });
-	}
+	return NextResponse.json({ message: "Cookies deleted" });
 }
