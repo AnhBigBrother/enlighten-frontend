@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
 		if (key === redirect_to) {
 			continue;
 		}
+		console.log(key, value);
 		cookieStore.set(key, value, {
 			httpOnly: true,
 			secure: true,

@@ -37,12 +37,6 @@ export const FirstLoad = () => {
 			})
 			.catch((err) => {
 				resetUser();
-				toast({
-					title: "Error!",
-					description: err.error || "Something went wrong, try latter",
-					variant: "destructive",
-				});
-				console.error(err);
 			});
 	}, []);
 
