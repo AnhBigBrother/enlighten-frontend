@@ -5,7 +5,7 @@ import { PostComment } from "@/components/post/post-comment";
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
-import { _get } from "@/lib/fetch";
+import { BACKEND_DOMAIN } from "@/constants";
 import { TPostData } from "@/types/post";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -14,9 +14,11 @@ type tParams = Promise<{ postId: string[] }>;
 
 const PostPage = async ({ params }: { params: tParams }) => {
 	const { postId } = await params;
-	const postData: TPostData = await _get(`api/v1/post/${postId}`).catch((error) => {
-		return notFound();
-	});
+	const postData: TPostData = await fetch(`${BACKEND_DOMAIN}/api/v1/post/${postId}`)
+		.then((res) => res.json())
+		.catch((error) => {
+			return notFound();
+		});
 
 	return (
 		<div className='flex flex-col items-start justify-start py-5'>
