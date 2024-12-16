@@ -106,10 +106,12 @@ export const Logo = () => {
 					<MenuGroup>
 						<MenuGroupHeader>Communities</MenuGroupHeader>
 						<MenuItem>
-							<div className='flex w-full flex-row space-x-4'>
+							<ProgressLink
+								href={"/group"}
+								className='flex w-full flex-row space-x-4'>
 								<HiOutlineUserGroup className='h-6 w-6' />
 								<span>Group</span>
-							</div>
+							</ProgressLink>
 						</MenuItem>
 						<MenuItem>
 							<a
@@ -126,16 +128,20 @@ export const Logo = () => {
 						<CollapsibleMenu label={<h4 className='ml-1 font-semibold'>Game</h4>}>
 							<CollapsibleContent>
 								<MenuItem>
-									<div className='flex w-full flex-row space-x-4'>
+									<ProgressLink
+										href={"/game/sudoku"}
+										className='flex w-full flex-row space-x-4'>
 										<Grid3X3 />
 										<p>Sudoku</p>
-									</div>
+									</ProgressLink>
 								</MenuItem>
 								<MenuItem>
-									<div className='flex w-full flex-row space-x-4'>
+									<ProgressLink
+										href={"/game/tic-tac-toe"}
+										className='flex w-full flex-row space-x-4'>
 										<GiTicTacToe className='h-6 w-6' />
 										<p>Tic-Tac-Toe</p>
-									</div>
+									</ProgressLink>
 								</MenuItem>
 							</CollapsibleContent>
 						</CollapsibleMenu>

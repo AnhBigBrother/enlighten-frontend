@@ -9,15 +9,23 @@ const ProfilePage = async () => {
 	const cookieStore = await cookies();
 	const access_token = cookieStore.get("access_token")?.value;
 
+	if (!access_token) {
+		redirect("/");
+	}
+
 	const userData: TUserInfo = await fetch(`${BACKEND_DOMAIN}/api/v1/user/me`, {
 		headers: {
 			authorization: `Bearer ${access_token}`,
 		},
 	})
-		.then((res) => res.json())
+		.then((res) => {
+			if (!res.ok) {
+				throw res;
+			}
+			return res.json();
+		})
 		.catch((err) => {
-			console.error(err);
-			redirect("/login");
+			redirect("/");
 		});
 
 	return <MyProfile userData={userData} />;

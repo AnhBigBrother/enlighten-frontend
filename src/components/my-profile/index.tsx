@@ -81,8 +81,8 @@ const MyProfile = ({ userData }: { userData: TUserInfo }) => {
 									<FormControl>
 										<Input {...field}></Input>
 									</FormControl>
-									<FormDescription>This is your public profile picture.</FormDescription>
 									<FormMessage></FormMessage>
+									<FormDescription>This is your public profile picture.</FormDescription>
 								</FormItem>
 								<Avatar className='h-20 w-20'>
 									<AvatarImage src={field.value} />
@@ -110,8 +110,8 @@ const MyProfile = ({ userData }: { userData: TUserInfo }) => {
 								<FormControl>
 									<Input {...field}></Input>
 								</FormControl>
-								<FormDescription>Your public username.</FormDescription>
 								<FormMessage></FormMessage>
+								<FormDescription>Your public username.</FormDescription>
 							</FormItem>
 						)}></FormField>
 					<FormField
@@ -123,8 +123,8 @@ const MyProfile = ({ userData }: { userData: TUserInfo }) => {
 								<FormControl>
 									<Textarea {...field}></Textarea>
 								</FormControl>
-								<FormDescription>Something about yourself.</FormDescription>
 								<FormMessage></FormMessage>
+								<FormDescription>Something about yourself.</FormDescription>
 							</FormItem>
 						)}></FormField>
 					<CollapsibleMenu

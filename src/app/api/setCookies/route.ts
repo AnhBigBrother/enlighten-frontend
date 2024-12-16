@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
 
 	for (let pair of searchParams.entries()) {
 		const [key, value] = pair;
-		console.log(key, value);
 		if (key === "redirect_to") {
 			continue;
 		}
