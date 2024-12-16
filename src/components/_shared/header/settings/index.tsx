@@ -90,22 +90,20 @@ export const Setting = () => {
 
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<button className='rounded-full border-none'>
-						<Avatar>
-							<AvatarImage src={user?.image} />
-							<AvatarFallback>
-								<User className='h-full w-full bg-accent p-2' />
-							</AvatarFallback>
-						</Avatar>
-					</button>
+					<Avatar>
+						<AvatarImage src={user?.image} />
+						<AvatarFallback>
+							<User className='h-full w-full cursor-pointer bg-accent p-2' />
+						</AvatarFallback>
+					</Avatar>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align='end'>
 					<DropdownMenuGroup>
 						{user ? (
-							<DropdownMenuItem>
+							<DropdownMenuItem asChild>
 								<ProgressLink
 									href={"/me/profile"}
-									className='flex h-full w-full flex-col items-start justify-start gap-3 py-2 hover:brightness-90'>
+									className='flex h-full w-full cursor-pointer flex-col items-start justify-start gap-3 py-2 hover:brightness-90'>
 									<div className='flex items-center space-x-3'>
 										<Avatar>
 											<AvatarImage src={user?.image} />
