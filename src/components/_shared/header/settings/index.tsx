@@ -90,10 +90,10 @@ export const Setting = () => {
 
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Avatar>
+					<Avatar className='cursor-pointer'>
 						<AvatarImage src={user?.image} />
 						<AvatarFallback>
-							<User className='h-full w-full cursor-pointer bg-accent p-2' />
+							<User className='h-full w-full bg-accent p-2' />
 						</AvatarFallback>
 					</Avatar>
 				</DropdownMenuTrigger>
