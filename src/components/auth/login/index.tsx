@@ -12,7 +12,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input, PasswordInput } from "@/components/ui/input";
-import { _get, _post } from "@/lib/fetch";
+import { _post } from "@/lib/fetch";
 import { LoginDTO, LoginSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";

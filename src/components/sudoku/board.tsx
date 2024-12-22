@@ -48,7 +48,7 @@ export const SudokuCell = ({
 }: React.InputHTMLAttributes<HTMLInputElement> & {
 	x: number;
 	y: number;
-	gridRef: React.MutableRefObject<HTMLInputElement | null>[][];
+	gridRef: React.RefObject<HTMLInputElement | null>[][];
 	board: number[][];
 	initBoard: number[][];
 }) => {
@@ -126,7 +126,7 @@ export const SudokuBoard = () => {
 	);
 	const [mode, setMode] = useState<"play" | "create">("play");
 	const [difficulty, setDifficulty] = useState<Difficulty>(Difficulties[1]);
-	const gridRef: React.MutableRefObject<React.RefObject<HTMLInputElement>[][]> = useRef(
+	const gridRef = useRef(
 		new Array(9).fill(null).map(() => {
 			const row = new Array(9).fill(null);
 			return row.map(() => useRef<HTMLInputElement>(null));

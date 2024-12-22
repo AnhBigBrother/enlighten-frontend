@@ -6,7 +6,6 @@ import {
 	MICROSOFT_GET_TOKEN_URL,
 	MICROSOFT_REDIRECT_URI,
 } from "@/constants";
-import { _post } from "@/lib/fetch";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

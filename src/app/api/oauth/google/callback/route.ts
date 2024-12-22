@@ -6,7 +6,6 @@ import {
 	GOOGLE_GET_TOKEN_URL,
 	BACKEND_DOMAIN,
 } from "@/constants";
-import { _post } from "@/lib/fetch";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

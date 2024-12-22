@@ -1,8 +1,8 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
-const useOnScrollIn = (): [MutableRefObject<any>, boolean] => {
+const useOnScrollIn = (): [RefObject<any>, boolean] => {
 	const [hasIntersected, setHasIntersected] = useState<boolean>(false);
-	const lastComponentRef = useRef<any>();
+	const lastComponentRef = useRef<any>(null);
 	useEffect(() => {
 		if (lastComponentRef.current) {
 			const observer = new IntersectionObserver((entries) => {
