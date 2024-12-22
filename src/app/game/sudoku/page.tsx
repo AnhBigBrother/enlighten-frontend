@@ -1,11 +1,8 @@
+import { SudokuBoard } from "@/components/sudoku/board";
 import React from "react";
 
 const Sudoku = () => {
-	return (
-		<div className='mt-10 grid w-full place-content-center'>
-			<p>Developing...</p>
-		</div>
-	);
+	return <SudokuBoard />;
 };
 
 export default Sudoku;

@@ -1,8 +1,8 @@
 "use client";
 
+import { ProgressLink } from "@/components/_shared/progress-link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ProgressLink } from "@/components/ui/progress-link";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useRecentStore, { TRecent } from "@/stores/recent-store";
 import { ArrowBigDown, ArrowBigUp, MessageSquare, User } from "lucide-react";

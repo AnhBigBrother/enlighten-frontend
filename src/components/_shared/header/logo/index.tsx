@@ -4,7 +4,6 @@ import Image from "next/image";
 import React, { useRef } from "react";
 import {
 	Bookmark,
-	Grid3X3,
 	House,
 	Menu,
 	MessageCircleMore,
@@ -16,12 +15,12 @@ import {
 } from "lucide-react";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { IconButton } from "@/components/ui/icon-button";
-import { GiTicTacToe } from "react-icons/gi";
+import { TbTicTac, TbGrid3X3 } from "react-icons/tb";
 import { MenuGroup, MenuGroupHeader, MenuItem, MenuSeperator } from "@/components/ui/menu";
 import { CollapsibleContent, CollapsibleMenu } from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ProgressLink } from "@/components/ui/progress-link";
+import { ProgressLink } from "@/components/_shared/progress-link";
 
 export const Logo = () => {
 	const sideMenu = useRef<HTMLDivElement | null>(null);
@@ -125,13 +124,13 @@ export const Logo = () => {
 					</MenuGroup>
 					<MenuSeperator />
 					<MenuGroup>
-						<CollapsibleMenu label={<h4 className='ml-1 font-semibold'>Game</h4>}>
+						<CollapsibleMenu label={<h4 className='ml-1 font-semibold'>Board games</h4>}>
 							<CollapsibleContent>
 								<MenuItem>
 									<ProgressLink
 										href={"/game/sudoku"}
 										className='flex w-full flex-row space-x-4'>
-										<Grid3X3 />
+										<TbGrid3X3 className='h-6 w-6' />
 										<p>Sudoku</p>
 									</ProgressLink>
 								</MenuItem>
@@ -139,7 +138,7 @@ export const Logo = () => {
 									<ProgressLink
 										href={"/game/tic-tac-toe"}
 										className='flex w-full flex-row space-x-4'>
-										<GiTicTacToe className='h-6 w-6' />
+										<TbTicTac className='h-6 w-6' />
 										<p>Tic-Tac-Toe</p>
 									</ProgressLink>
 								</MenuItem>

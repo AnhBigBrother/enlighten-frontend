@@ -1,5 +1,5 @@
+import { ProgressLink } from "@/components/_shared/progress-link";
 import { Button } from "@/components/ui/button";
-import { ProgressLink } from "@/components/ui/progress-link";
 import React from "react";
 
 const FormFooter = ({ href, label }: { href: string; label: string }) => {

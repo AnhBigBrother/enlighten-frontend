@@ -56,6 +56,16 @@ export default {
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
 			},
+			gridTemplateColumns: {
+				"16": "repeat(16, minmax(0, 1fr))",
+				"20": "repeat(20, minmax(0, 1fr))",
+				"40": "repeat(40, minmax(0, 1fr))",
+			},
+			gridTemplateRows: {
+				"16": "repeat(16, minmax(0, 1fr))",
+				"20": "repeat(20, minmax(0, 1fr))",
+				"40": "repeat(40, minmax(0, 1fr))",
+			},
 		},
 	},
 	plugins: [require("tailwindcss-animate")],

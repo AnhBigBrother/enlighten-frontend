@@ -1,7 +1,7 @@
+import { ProgressLink } from "@/components/_shared/progress-link";
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
-import { ProgressLink } from "@/components/ui/progress-link";
 import { TPostData } from "@/types/post";
 import React from "react";
 

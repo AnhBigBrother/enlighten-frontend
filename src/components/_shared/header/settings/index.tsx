@@ -32,7 +32,7 @@ import { cn } from "@/lib/utils";
 import { NotebookPen } from "lucide-react";
 import React from "react";
 import { IconButton } from "@/components/ui/icon-button";
-import { ProgressLink } from "@/components/ui/progress-link";
+import { ProgressLink } from "@/components/_shared/progress-link";
 
 export const Setting = () => {
 	const user = useUserStore.use.user();

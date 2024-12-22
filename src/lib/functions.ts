@@ -8,3 +8,14 @@ export function createRandomString(length: number) {
 	});
 	return result;
 }
+
+export function secondToTimeString(sec: number): string {
+	const min = Math.floor(sec / 60);
+	const hour = Math.floor(min / 60);
+	sec = sec % 60;
+	const minStr = min < 10 ? `0${min}` : String(min);
+	const hourStr = hour < 10 ? `0${hour}` : String(hour);
+	const secStr = sec < 10 ? `0${sec}` : String(sec);
+
+	return `${hourStr}:${minStr}:${secStr}`;
+}

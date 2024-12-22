@@ -32,6 +32,7 @@ const CommentReply = ({
 	const [hasVoted, setHasVoted] = useState<"up" | "none" | "down">("none");
 	const [upVoted, setUpVoted] = useState<number>(replyData.up_voted);
 	const [downVoted, setDownVoted] = useState<number>(replyData.down_voted);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const user = useUserStore.use.user();
 	useEffect(() => {
 		if (user) {
@@ -47,6 +48,7 @@ const CommentReply = ({
 	}, [user]);
 
 	const handleUpVoteComment = () => {
+		setIsLoading(true);
 		_post(`api/v1/post/${postId}/comment/${replyData.id}/upvote`)
 			.then(() => {
 				if (hasVoted === "up") {
@@ -67,9 +69,11 @@ const CommentReply = ({
 					variant: "destructive",
 				});
 				console.error(err);
-			});
+			})
+			.finally(() => setIsLoading(true));
 	};
 	const handleDownVoteComment = () => {
+		setIsLoading(true);
 		_post(`api/v1/post/${postId}/comment/${replyData.id}/downvote`)
 			.then(() => {
 				if (hasVoted === "down") {
@@ -90,7 +94,8 @@ const CommentReply = ({
 					variant: "destructive",
 				});
 				console.error(err);
-			});
+			})
+			.finally(() => setIsLoading(true));
 	};
 
 	return (
@@ -113,22 +118,24 @@ const CommentReply = ({
 					<div className='flex flex-row gap-2'>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500",
+								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
 								{
 									"text-blue-500": hasVoted === "up",
 								},
 							)}
+							disabled={isLoading}
 							onClick={() => handleUpVoteComment()}>
 							<ArrowBigUp className='mr-1 h-5 w-5' />
 							<span>{upVoted}</span>
 						</button>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500",
+								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
 								{
 									"text-blue-500": hasVoted === "down",
 								},
 							)}
+							disabled={isLoading}
 							onClick={() => handleDownVoteComment()}>
 							<ArrowBigDown className='mr-1 h-5 w-5' />
 							<span>{downVoted}</span>
@@ -236,6 +243,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	const [isReplyOpen, setIsReplyOpen] = useState<boolean>(false);
 	const [showReplies, setShowReplies] = useState<boolean>(false);
 	const [isLoadingReplies, setIsLoadingReplies] = useState<boolean>(false);
+	const [isVoting, setIsVoting] = useState<boolean>(false);
 	const [replies, setReplies] = useState<TComment[]>([]);
 	const user = useUserStore.use.user();
 	const { toast } = useToast();
@@ -265,6 +273,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	}, [showReplies]);
 
 	const handleUpVoteComment = () => {
+		setIsVoting(true);
 		_post(`api/v1/post/${postId}/comment/${commentData.id}/upvote`)
 			.then(() => {
 				if (hasVoted === "up") {
@@ -285,9 +294,11 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 					variant: "destructive",
 				});
 				console.error(err);
-			});
+			})
+			.finally(() => setIsVoting(false));
 	};
 	const handleDownVoteComment = () => {
+		setIsVoting(true);
 		_post(`api/v1/post/${postId}/comment/${commentData.id}/downvote`)
 			.then(() => {
 				if (hasVoted === "down") {
@@ -308,7 +319,8 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 					variant: "destructive",
 				});
 				console.error(err);
-			});
+			})
+			.finally(() => setIsVoting(false));
 	};
 
 	return (
@@ -333,22 +345,24 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 					<div className='flex flex-row gap-2'>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500",
+								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
 								{
 									"text-blue-500": hasVoted === "up",
 								},
 							)}
+							disabled={isVoting}
 							onClick={() => handleUpVoteComment()}>
 							<ArrowBigUp className='mr-1 h-5 w-5' />
 							<span>{upVoted}</span>
 						</button>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500",
+								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
 								{
 									"text-blue-500": hasVoted === "down",
 								},
 							)}
+							disabled={isVoting}
 							onClick={() => handleDownVoteComment()}>
 							<ArrowBigDown className='mr-1 h-5 w-5' />
 							<span>{downVoted}</span>
