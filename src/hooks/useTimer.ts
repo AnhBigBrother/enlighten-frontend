@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 export const useTimer = (duration: number, startTime?: number, stopTime?: number) => {
 	const [time, setTime] = useState<number>(startTime || 0);
 	const [isTicking, setIsTicking] = useState<boolean>(false);
-	const interval = useRef<NodeJS.Timeout>();
+	const interval = useRef<NodeJS.Timeout>(undefined);
 
 	stopTime &&
 		useEffect(() => {
