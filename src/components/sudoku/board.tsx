@@ -132,7 +132,7 @@ const SquareCell = ({
 	return (
 		<input
 			ref={ref}
-			readOnly={initBoard[position.x][position.y] > 0}
+			readOnly
 			className={cn(
 				"h-full w-full rounded-lg border text-center text-lg outline-none",
 				className,
@@ -430,10 +430,10 @@ export const SudokuBoard = () => {
 						<div className='grid h-28 w-28 flex-shrink-0 grid-cols-3 grid-rows-3 items-center gap-1 sm:h-36 sm:w-36'>
 							{new Array(9).fill(null).map((_, i) => (
 								<Button
-									key={`keyboard-${i}`}
-									className='h-full'
-									onClick={() => setPressedKey({ ...keys[i] })}>
-									{i}
+									key={`keyboard-${i + 1}`}
+									className='h-full w-full'
+									onClick={() => setPressedKey({ ...keys[i + 1] })}>
+									{i + 1}
 								</Button>
 							))}
 						</div>
