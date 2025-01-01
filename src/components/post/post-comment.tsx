@@ -109,7 +109,15 @@ const CommentReply = ({
 				</Avatar>
 				<div className='flex flex-col items-start justify-center font-semibold'>
 					<h4 className='font-semibold'>{replyData.author_name}</h4>
-					<span className='text-xs text-muted-foreground'>{replyData.created_at}</span>
+					<span className='text-xs font-light text-muted-foreground'>
+						{new Date(replyData.created_at).toLocaleTimeString("en-us", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+							hour: "2-digit",
+							minute: "2-digit",
+						})}
+					</span>
 				</div>
 			</div>
 			<div className='ml-9'>
@@ -335,7 +343,13 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 				<div className='flex flex-col items-start justify-center font-semibold'>
 					<h4 className='font-semibold'>{commentData.author_name}</h4>
 					<span className='text-xs font-light text-muted-foreground'>
-						{commentData.created_at}
+						{new Date(commentData.created_at).toLocaleTimeString("en-us", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+							hour: "2-digit",
+							minute: "2-digit",
+						})}
 					</span>
 				</div>
 			</div>

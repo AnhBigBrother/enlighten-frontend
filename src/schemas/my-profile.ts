@@ -15,7 +15,9 @@ const MyProfileSchema = z
 			message: "Password must be 6 characters or longer",
 		}),
 		confirmPassword: z.string(),
-		bio: z.string(),
+		bio: z.string().refine((bio) => bio !== null && bio.length <= 255, {
+			message: "Bio must in range 0-255 characters",
+		}),
 	})
 	.refine((data) => data.newPassword === data.confirmPassword, {
 		message: "Password does not match",

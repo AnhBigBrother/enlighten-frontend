@@ -20,7 +20,15 @@ export const PostHeader = (props: PostHeaderProps) => {
 			</Avatar>
 			<div className='flex flex-col items-start justify-center text-sm'>
 				<h4 className='font-bold'>{props.authorName}</h4>
-				<p className='font-light text-muted-foreground'>{props.createdAt}</p>
+				<p className='font-light text-muted-foreground'>
+					{new Date(props.createdAt).toLocaleTimeString("en-us", {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+						hour: "2-digit",
+						minute: "2-digit",
+					})}
+				</p>
 			</div>
 		</div>
 	);
