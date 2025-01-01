@@ -1,21 +1,30 @@
-import { ProgressLink } from "@/components/_shared/progress-link";
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
+import { cn } from "@/lib/utils";
 import { TPostData } from "@/types/post";
 import React from "react";
 
-const PostCard = React.forwardRef(({ postData }: { postData: TPostData }, ref: any) => {
+const Post = ({
+	postData,
+	className,
+	ref,
+	...props
+}: React.HTMLAttributes<HTMLDivElement> & {
+	postData: TPostData;
+	ref?: React.Ref<HTMLDivElement>;
+}) => {
 	return (
-		<ProgressLink
+		<div
 			ref={ref}
-			href={`/post/${postData.id}`}
-			className='w-full rounded-lg border p-3 hover:bg-secondary/50'>
+			className={cn("w-full", className)}>
 			<PostHeader
+				postId={postData.id}
 				authorId={postData.author_id}
 				authorImage={postData.author_image}
 				authorName={postData.author_name}
 				createdAt={postData.created_at}
+				linkPost={`/post/${postData.id}`}
 			/>
 			<PostContent
 				title={postData.title}
@@ -28,8 +37,8 @@ const PostCard = React.forwardRef(({ postData }: { postData: TPostData }, ref: a
 				down_voted={postData.down_voted}
 				created_at={postData.created_at}
 			/>
-		</ProgressLink>
+		</div>
 	);
-});
+};
 
-export { PostCard };
+export { Post };

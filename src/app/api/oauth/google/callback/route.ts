@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
 		}).then((res) => res.json());
 
 		return NextResponse.redirect(
-			`${BACKEND_DOMAIN}/api/v1/oauth/google?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_DOMAIN}/api/setCookies`,
+			`${BACKEND_DOMAIN}/api/v1/auth/google?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_DOMAIN}/api/setCookies`,
 		);
 	} catch (error) {
 		console.error(error);

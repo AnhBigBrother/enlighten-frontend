@@ -1,4 +1,4 @@
-import { SudokuBoard } from "@/components/sudoku/board";
+import { SudokuBoard } from "@/components/sudoku-board";
 import React from "react";
 
 const Sudoku = () => {

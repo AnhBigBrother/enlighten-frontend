@@ -24,7 +24,7 @@ export const FirstLoad = () => {
 	}, [pathName]);
 
 	useEffect(() => {
-		_get("api/v1/user/me/session")
+		_get("api/v1/me/session")
 			.then((userSession: TUser) => {
 				if (!userSession) {
 					throw new Error("Session not found.");

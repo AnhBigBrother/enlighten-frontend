@@ -2,7 +2,7 @@
 
 import { SortBy, TSortItem } from "@/components/_shared/sort-by";
 import { Spinner } from "@/components/_shared/spinner";
-import { PostCard } from "@/components/post/post-card";
+import { Post } from "@/components/post";
 import { useOnScrollIn } from "@/hooks/use-on-scroll-in";
 import { _get } from "@/lib/fetch";
 import useProgressStore from "@/stores/progress-store";
@@ -15,7 +15,13 @@ const arr: TSortItem[] = [
 	{ label: "Hot", value: "hot" },
 ];
 
-export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData[] }) => {
+export const PostScroller = ({
+	serverLoadedPosts,
+	path,
+}: {
+	serverLoadedPosts: TPostData[];
+	path: string;
+}) => {
 	const [posts, setPosts] = useState<TPostData[]>(serverLoadedPosts);
 	const [sortedState, setSortedState] = useState<TSortItem>(arr[0]);
 	const [offset, setOffset] = useState<number>(5);
@@ -29,7 +35,7 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 	useEffect(() => {
 		if (hasIntersected && hasMore && !isLoading) {
 			setIsLoading(true);
-			_get("api/v1/post", {
+			_get(path, {
 				searchParams: {
 					sort: sortedState.value,
 					limit: "5",
@@ -62,7 +68,7 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 		setOffset(0);
 		setHasMore(true);
 		updateProgress(50);
-		_get("/api/v1/post", {
+		_get(path, {
 			searchParams: {
 				sort: sortedState.value,
 				limit: "5",
@@ -98,7 +104,8 @@ export const HomeClient = ({ serverLoadedPosts }: { serverLoadedPosts: TPostData
 			/>
 			<div className='flex flex-col space-y-3'>
 				{posts.map((p) => (
-					<PostCard
+					<Post
+						className='rounded-lg border p-3'
 						postData={p}
 						key={p.id}
 					/>

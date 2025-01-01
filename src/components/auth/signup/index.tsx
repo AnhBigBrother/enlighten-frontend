@@ -36,7 +36,7 @@ function SignupForm() {
 	const onSubmit = async (data: SignupDTO) => {
 		setIsPending(true);
 		setError("");
-		const { access_token, refresh_token } = await await _post("api/v1/user/signup", {
+		const { access_token, refresh_token } = await await _post("api/v1/auth/signup", {
 			body: data,
 		}).catch((err) => {
 			setSuccess("");

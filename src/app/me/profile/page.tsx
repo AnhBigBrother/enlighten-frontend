@@ -1,4 +1,4 @@
-import MyProfile from "@/components/my-profile";
+import { UpdateProfileForm } from "@/components/update-profile-form";
 import { BACKEND_DOMAIN } from "@/constants";
 import { TUserInfo } from "@/types/user";
 import { cookies } from "next/headers";
@@ -13,7 +13,7 @@ const ProfilePage = async () => {
 		redirect("/");
 	}
 
-	const userData: TUserInfo = await fetch(`${BACKEND_DOMAIN}/api/v1/user/me`, {
+	const userData: TUserInfo = await fetch(`${BACKEND_DOMAIN}/api/v1/me`, {
 		headers: {
 			authorization: `Bearer ${access_token}`,
 		},
@@ -28,7 +28,11 @@ const ProfilePage = async () => {
 			redirect("/");
 		});
 
-	return <MyProfile userData={userData} />;
+	return (
+		<div className='my-8 flex justify-center'>
+			<UpdateProfileForm userData={userData} />;
+		</div>
+	);
 };
 
 export default ProfilePage;

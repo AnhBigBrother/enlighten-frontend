@@ -18,6 +18,7 @@ export const MenuList = React.forwardRef<HTMLMenuElement, Props>(
 		);
 	},
 );
+MenuList.displayName = "MenuList";
 
 export const MenuGroupHeader = React.forwardRef<HTMLLabelElement, Props>(
 	({ children, className }, ref) => {
@@ -34,6 +35,7 @@ export const MenuGroupHeader = React.forwardRef<HTMLLabelElement, Props>(
 		);
 	},
 );
+MenuGroupHeader.displayName = "MenuGroupHeader";
 
 export const MenuGroup = React.forwardRef<HTMLDivElement, Props>(
 	({ children, className }, ref) => {
@@ -46,6 +48,7 @@ export const MenuGroup = React.forwardRef<HTMLDivElement, Props>(
 		);
 	},
 );
+MenuGroup.displayName = "MenuGroup";
 
 export const MenuItem = React.forwardRef<HTMLDivElement, Props & { active?: boolean }>(
 	({ children, className, active }, ref) => {
@@ -62,6 +65,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, Props & { active?: bool
 		);
 	},
 );
+MenuItem.displayName = "MenuItem";
 
 export const MenuSeperator = () => {
 	return <div className='my-3 w-full border'></div>;

@@ -52,5 +52,6 @@ const CollapsibleMenu = React.forwardRef<HTMLDivElement, CollapsibleMenuProps>(
 		);
 	},
 );
+CollapsibleMenu.displayName = "CollapsibleMenu";
 
 export { Collapsible, CollapsibleTrigger, CollapsibleContent, CollapsibleMenu };

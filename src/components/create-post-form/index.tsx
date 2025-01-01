@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
-const CreatePost = () => {
+const CreatePostForm = () => {
 	const router = useRouter();
 	const { toast } = useToast();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,7 +32,7 @@ const CreatePost = () => {
 
 	const createPost = async (data: CreatePostDTO) => {
 		setIsLoading(true);
-		await _post("api/v1/post/create", {
+		await _post("api/v1/posts/create", {
 			body: data,
 		})
 			.then((post) => {
@@ -117,4 +117,4 @@ const CreatePost = () => {
 	);
 };
 
-export default CreatePost;
+export { CreatePostForm };

@@ -40,7 +40,7 @@ export const Setting = () => {
 	const { setTheme, theme } = useTheme();
 	const { toast } = useToast();
 	const handleLogout = () => {
-		_post("api/v1/user/signout")
+		_post("api/v1/auth/signout")
 			.then((result) => {
 				toast({
 					title: result.message || "Loged out!",
@@ -136,7 +136,7 @@ export const Setting = () => {
 									<DialogHeader>
 										<DialogTitle>Theme setting</DialogTitle>
 										<DialogDescription>
-											Adjust how you'd like Enlighten to appear on this browser.
+											Adjust how you&#39;d like Enlighten to appear on this browser.
 										</DialogDescription>
 									</DialogHeader>
 									<div className='flex flex-row items-center space-x-4'>

@@ -38,7 +38,7 @@ const handleTokenRotation = async (path: string, method: Methods, options?: Opti
 	if (!res1.ok) {
 		if (data1.error !== "unauthorized: access_token failed") throw data1;
 
-		const res2 = await request("api/v1/user/me/access_token", "GET");
+		const res2 = await request("api/v1/me/access_token", "GET");
 		const data2 = await res2.json();
 
 		if (!res2.ok || !data2.access_token || !data2.refresh_token) throw data2;

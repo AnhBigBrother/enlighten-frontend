@@ -1,7 +1,7 @@
 "use server";
 
-import { PostClient } from "@/components/post/post-client";
-import { PostComment } from "@/components/post/post-comment";
+import { Post } from "@/components/post";
+import { PostAdditional } from "@/components/post/post-additional";
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
@@ -10,19 +10,18 @@ import { TPostData } from "@/types/post";
 import { notFound } from "next/navigation";
 import React from "react";
 
-type tParams = Promise<{ postId: string[] }>;
-
-const PostPage = async ({ params }: { params: tParams }) => {
+const PostPage = async ({ params }: { params: Promise<{ postId: string[] }> }) => {
 	const { postId } = await params;
-	const postData: TPostData = await fetch(`${BACKEND_DOMAIN}/api/v1/post/${postId}`)
+	const postData: TPostData = await fetch(`${BACKEND_DOMAIN}/api/v1/posts/${postId}`)
 		.then((res) => res.json())
 		.catch((error) => {
 			return notFound();
 		});
 
 	return (
-		<div className='flex flex-col items-start justify-start py-5'>
+		<div className='flex w-full flex-col items-start justify-start py-5'>
 			<PostHeader
+				postId={postData.id}
 				authorId={postData.author_id}
 				authorImage={postData.author_image}
 				authorName={postData.author_name}
@@ -39,8 +38,7 @@ const PostPage = async ({ params }: { params: tParams }) => {
 				down_voted={postData.down_voted}
 				created_at={postData.created_at}
 			/>
-			<PostComment postId={postData.id} />
-			<PostClient
+			<PostAdditional
 				data={{
 					id: postData.id,
 					title: postData.title,

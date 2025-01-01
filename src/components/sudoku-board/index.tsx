@@ -10,7 +10,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { _get, _post } from "@/lib/fetch";
 import { cn } from "@/lib/utils";
-import React, { useState, useRef, Fragment, useEffect, RefObject } from "react";
+import React, { useState, useRef, Fragment, useEffect } from "react";
 import { FaEraser } from "react-icons/fa6";
 import {
 	ChevronDown,
@@ -166,7 +166,7 @@ export const SudokuBoard = () => {
 	const [timer, isTicking, setIsTicking, clearTimer] = useTimer(1);
 	useEffect(() => {
 		clearTimer();
-		_get("api/v1/game/sudoku", {
+		_get("api/v1/games/sudoku", {
 			searchParams: {
 				hide: `${difficulty.value}`,
 			},
@@ -209,7 +209,7 @@ export const SudokuBoard = () => {
 		});
 	};
 	const handleSolve = () => {
-		_post("api/v1/game/sudoku", {
+		_post("api/v1/games/sudoku", {
 			body: {
 				board: board,
 			},

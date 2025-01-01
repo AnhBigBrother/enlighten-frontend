@@ -32,7 +32,7 @@ function LoginForm() {
 	const onSubmit = async (data: LoginDTO) => {
 		setIsPending(true);
 		setError("");
-		const { access_token, refresh_token } = await _post("api/v1/user/signin", {
+		const { access_token, refresh_token } = await _post("api/v1/auth/signin", {
 			body: data,
 		}).catch((err) => {
 			setSuccess("");
