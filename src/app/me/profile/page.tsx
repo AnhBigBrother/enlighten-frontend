@@ -30,7 +30,7 @@ const ProfilePage = async () => {
 
 	return (
 		<div className='my-8 flex justify-center'>
-			<UpdateProfileForm userData={userData} />;
+			<UpdateProfileForm userData={userData} />
 		</div>
 	);
 };
