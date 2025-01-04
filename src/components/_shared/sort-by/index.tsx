@@ -19,16 +19,14 @@ export const SortBy = ({
 	arr,
 	state,
 	setState,
+	...attribute
 }: {
-	arr: {
-		label: string;
-		value: string;
-	}[];
+	arr: TSortItem[];
 	state: TSortItem;
 	setState: React.Dispatch<React.SetStateAction<TSortItem>>;
-}) => {
+} & React.HTMLAttributes<HTMLElement>) => {
 	return (
-		<div className='w-full py-2'>
+		<div {...attribute}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<button className='flex flex-row items-center space-x-2 rounded-lg border p-2 hover:bg-accent'>

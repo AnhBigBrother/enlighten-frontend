@@ -1,4 +1,4 @@
-import { UpdateProfileForm } from "@/components/update-profile-form";
+import { UpdateProfileForm } from "@/components/forms/update-profile-form";
 import { BACKEND_DOMAIN } from "@/constants";
 import { TUserInfo } from "@/types/user";
 import { cookies } from "next/headers";

@@ -1,6 +1,6 @@
-import { FormHeader } from "@/components/auth/auth-form/form-header";
-import { FormOAuth } from "@/components/auth/auth-form/form-oauth";
-import { FormFooter } from "@/components/auth/auth-form/form-footer";
+import { FormHeader } from "@/components/forms/auth-form/form-header";
+import { FormOAuth } from "@/components/forms/auth-form/form-oauth";
+import { FormFooter } from "@/components/forms/auth-form/form-footer";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import React from "react";
 import { X } from "lucide-react";

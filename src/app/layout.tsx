@@ -4,7 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/contexts/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { FirstLoad } from "@/components/_shared/first-load";
-import PageHeader from "@/components/_shared/header";
+import PageHeader from "@/components/header";
 
 import { Suspense } from "react";
 import { Recents } from "@/components/_shared/recents";
@@ -55,7 +55,7 @@ export default function RootLayout({
 					<div className='min-h-[calc(100vh-4rem)] xl:px-5'>
 						<div className='flex w-full flex-col items-center justify-start xl:pl-72'>
 							<div className='relative flex w-full max-w-[72rem] flex-row justify-start space-x-4 px-2'>
-								<main className='flex-grow'>{children}</main>
+								<main className='min-w-0 flex-grow'>{children}</main>
 								<Recents />
 							</div>
 						</div>

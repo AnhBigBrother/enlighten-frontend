@@ -5,6 +5,7 @@ import { Spinner } from "@/components/_shared/spinner";
 import { Post } from "@/components/post";
 import { useOnScrollIn } from "@/hooks/use-on-scroll-in";
 import { _get } from "@/lib/fetch";
+import { cn } from "@/lib/utils";
 import useProgressStore from "@/stores/progress-store";
 import { TPostData } from "@/types/post";
 import React, { useEffect, useRef, useState } from "react";
@@ -16,15 +17,21 @@ const arr: TSortItem[] = [
 ];
 
 export const PostScroller = ({
-	serverLoadedPosts,
 	path,
+	serverLoadedPosts,
+	label,
+	ref,
+	className,
+	...attribute
 }: {
-	serverLoadedPosts: TPostData[];
 	path: string;
-}) => {
-	const [posts, setPosts] = useState<TPostData[]>(serverLoadedPosts);
+	serverLoadedPosts?: TPostData[];
+	label?: React.ReactElement;
+	ref?: React.Ref<HTMLDivElement>;
+} & React.HTMLAttributes<HTMLElement>) => {
+	const [posts, setPosts] = useState<TPostData[]>(serverLoadedPosts || []);
 	const [sortedState, setSortedState] = useState<TSortItem>(arr[0]);
-	const [offset, setOffset] = useState<number>(5);
+	const [offset, setOffset] = useState<number>(serverLoadedPosts?.length || 0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [lastComponentRef, hasIntersected] = useOnScrollIn();
@@ -72,7 +79,7 @@ export const PostScroller = ({
 			searchParams: {
 				sort: sortedState.value,
 				limit: "5",
-				offset: `0`,
+				offset: "0",
 			},
 		})
 			.then((posts: TPostData[]) => {
@@ -96,12 +103,18 @@ export const PostScroller = ({
 	}, [sortedState]);
 
 	return (
-		<div className='flex flex-col'>
-			<SortBy
-				state={sortedState}
-				setState={setSortedState}
-				arr={arr}
-			/>
+		<div
+			className={cn("flex flex-col", className)}
+			{...attribute}
+			ref={ref}>
+			<div className='flex items-center gap-3 py-2'>
+				{label}
+				<SortBy
+					state={sortedState}
+					setState={setSortedState}
+					arr={arr}
+				/>
+			</div>
 			<div className='flex flex-col space-y-3'>
 				{posts.map((p) => (
 					<Post

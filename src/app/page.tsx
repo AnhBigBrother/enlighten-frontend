@@ -1,6 +1,6 @@
 import React from "react";
 import { TPostData } from "@/types/post";
-import { PostScroller } from "@/components/post-scroller";
+import { PostScroller } from "@/components/scrollers/post-scroller";
 import { BACKEND_DOMAIN } from "@/constants";
 import { notFound } from "next/navigation";
 
@@ -20,6 +20,7 @@ export default async function Home() {
 		<PostScroller
 			path='api/v1/posts'
 			serverLoadedPosts={serverLoadedPosts || []}
+			label={<h1 className='ml-1 text-lg font-bold'>Feeds:</h1>}
 		/>
 	);
 }

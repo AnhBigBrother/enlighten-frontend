@@ -2,16 +2,16 @@ import { RefObject, useEffect, useRef, useState } from "react";
 
 const useOnScrollIn = (): [RefObject<any>, boolean] => {
 	const [hasIntersected, setHasIntersected] = useState<boolean>(false);
-	const lastComponentRef = useRef<any>(null);
+	const observingComponentRef = useRef<any>(null);
 	useEffect(() => {
-		if (lastComponentRef.current) {
+		if (observingComponentRef.current) {
 			const observer = new IntersectionObserver((entries) => {
 				setHasIntersected(entries[0].isIntersecting);
 			});
-			observer.observe(lastComponentRef.current);
+			observer.observe(observingComponentRef.current);
 		}
 	}, []);
-	return [lastComponentRef, hasIntersected];
+	return [observingComponentRef, hasIntersected];
 };
 
 export { useOnScrollIn };

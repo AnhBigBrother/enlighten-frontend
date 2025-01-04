@@ -22,4 +22,13 @@ type TUserOverview = {
 	updated_at: string;
 };
 
-export { type TUserInfo, type TUserOverview };
+type TAuthor = {
+	id: string;
+	email: string;
+	name: string;
+	image: string;
+	total_posts: number;
+	total_upvoted: number;
+};
+
+export { type TUserInfo, type TUserOverview, type TAuthor };

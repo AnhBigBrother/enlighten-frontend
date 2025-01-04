@@ -1,6 +1,6 @@
-import { Logo } from "@/components/_shared/header/logo";
-import { Search } from "@/components/_shared/header/search";
-import { Setting } from "@/components/_shared/header/settings";
+import { Logo } from "@/components/header/logo";
+import { Search } from "@/components/header/search";
+import { Setting } from "@/components/header/settings";
 import React from "react";
 
 const Heading = () => {

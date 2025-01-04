@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	Bookmark,
 	House,
@@ -21,9 +21,23 @@ import { CollapsibleContent, CollapsibleMenu } from "@/components/ui/collapsible
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProgressLink } from "@/components/_shared/progress-link";
+import useUserStore from "@/stores/user-store";
+import { TAuthor } from "@/types/user";
+import { _get } from "@/lib/fetch";
+import { useInfinityScroll } from "@/hooks/use-infinity-scroll";
+import { Spinner } from "@/components/_shared/spinner";
 
 export const Logo = () => {
+	const user = useUserStore.use.user();
 	const sideMenu = useRef<HTMLDivElement | null>(null);
+
+	const [authors, lastAuthorRef, loadingAuthor] = useInfinityScroll<TAuthor>(
+		"api/v1/me/followed",
+		5,
+		[],
+		user,
+	);
+
 	const toggleSideMenu = (e?: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		if (sideMenu.current) {
 			// if (e) {
@@ -149,33 +163,37 @@ export const Logo = () => {
 					<MenuGroup>
 						<CollapsibleMenu label={<h4 className='ml-1 font-semibold'>Subscriptions</h4>}>
 							<CollapsibleContent className='mt-1'>
-								<div className='flex w-full flex-row items-center space-x-2 p-1'>
-									<Avatar className='h-9 w-9'>
-										<AvatarImage src='' />
-										<AvatarFallback>
-											<User className='h-full w-full cursor-pointer bg-accent p-2' />
-										</AvatarFallback>
-									</Avatar>
-									<p>Writter</p>
-								</div>
-								<div className='flex w-full flex-row items-center space-x-2 p-1'>
-									<Avatar className='h-9 w-9'>
-										<AvatarImage src='' />
-										<AvatarFallback>
-											<User className='h-full w-full cursor-pointer bg-accent p-2' />
-										</AvatarFallback>
-									</Avatar>
-									<p>Writter</p>
-								</div>
-								<div className='flex w-full flex-row items-center space-x-2 p-1'>
-									<Avatar className='h-9 w-9'>
-										<AvatarImage src='' />
-										<AvatarFallback>
-											<User className='h-full w-full cursor-pointer bg-accent p-2' />
-										</AvatarFallback>
-									</Avatar>
-									<p>Writter</p>
-								</div>
+								{authors.map((a, i) =>
+									i < authors.length - 1 ? (
+										<ProgressLink
+											href={`user/${a.id}`}
+											className='my-1 flex w-full flex-row items-center space-x-2 p-1'
+											key={a.id}>
+											<Avatar className='h-9 w-9'>
+												<AvatarImage src={a.image} />
+												<AvatarFallback>
+													<User className='h-full w-full cursor-pointer bg-accent p-2' />
+												</AvatarFallback>
+											</Avatar>
+											<p>{a.name}</p>
+										</ProgressLink>
+									) : (
+										<ProgressLink
+											href={`user/${a.id}`}
+											className='my-1 flex w-full flex-row items-center space-x-2 p-1'
+											key={a.id}
+											ref={lastAuthorRef}>
+											<Avatar className='h-9 w-9'>
+												<AvatarImage src={a.image} />
+												<AvatarFallback>
+													<User className='h-full w-full cursor-pointer bg-accent p-2' />
+												</AvatarFallback>
+											</Avatar>
+											<p>{a.name}</p>
+										</ProgressLink>
+									),
+								)}
+								{loadingAuthor && <Spinner />}
 							</CollapsibleContent>
 						</CollapsibleMenu>
 					</MenuGroup>
