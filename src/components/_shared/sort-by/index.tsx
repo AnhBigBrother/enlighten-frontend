@@ -29,7 +29,7 @@ export const SortBy = ({
 		<div {...attribute}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<button className='flex flex-row items-center space-x-2 rounded-lg border p-2 hover:bg-accent'>
+					<button className='flex h-10 w-fit flex-row items-center space-x-2 rounded-lg border px-3 hover:bg-accent'>
 						<span>{state.label}</span>
 						<ChevronsUpDown className='h-4 w-4' />
 					</button>

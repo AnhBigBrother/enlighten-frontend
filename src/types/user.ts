@@ -18,6 +18,8 @@ type TUserOverview = {
 	total_posts: number;
 	total_upvoted: number;
 	total_downvoted: number;
+	follower: number;
+	following: number;
 	created_at: string;
 	updated_at: string;
 };

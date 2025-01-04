@@ -70,7 +70,7 @@ export const UserHorizontalScroller = ({
 					{authors.map((a, i) =>
 						i < authors.length - 1 ? (
 							<ProgressLink
-								href={`user/${a.id}`}
+								href={`/user/${a.id}`}
 								key={a.id}>
 								<Avatar className='h-24 w-24 rounded-lg sm:h-36 sm:w-36'>
 									<AvatarImage src={a.image}></AvatarImage>
@@ -84,7 +84,7 @@ export const UserHorizontalScroller = ({
 							</ProgressLink>
 						) : (
 							<ProgressLink
-								href={`user/${a.id}`}
+								href={`/user/${a.id}`}
 								key={a.id}
 								ref={lastAuthorRef}>
 								<Avatar className='h-24 w-24 rounded-lg sm:h-36 sm:w-36'>

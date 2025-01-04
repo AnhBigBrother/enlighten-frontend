@@ -52,15 +52,9 @@ const MyPosts = async () => {
 					</Avatar>
 				</div>
 				<div className='flex flex-grow flex-col pt-2'>
-					<div className='flex flex-row flex-wrap justify-between gap-x-5 gap-y-2'>
-						<div className='flex max-w-48 flex-col sm:max-w-full'>
-							<h2 className='text-xl font-bold '>{userOverview.name}</h2>
-							<p className='truncate text-sm text-muted-foreground'>{userOverview.email}</p>
-						</div>
-						<Button className='mr-6 w-fit'>
-							<Plus />
-							<span>Folllow</span>
-						</Button>
+					<div className='flex max-w-48 flex-col sm:max-w-full'>
+						<h2 className='text-xl font-bold '>{userOverview.name}</h2>
+						<p className='truncate text-sm text-muted-foreground'>{userOverview.email}</p>
 					</div>
 					<p className='my-3 text-sm italic sm:text-base'>{userOverview.bio}</p>
 					<div className='my-1 hidden gap-8 text-muted-foreground sm:flex'>
@@ -127,9 +121,10 @@ const MyPosts = async () => {
 			</div>
 
 			<PostScroller
+				className='mt-2'
 				path={`/api/v1/me/posts`}
 				serverLoadedPosts={userPosts}
-				label={<h1 className='font-bold'>User posts:</h1>}
+				label={<h1 className='font-bold'>Your posts:</h1>}
 			/>
 		</div>
 	);

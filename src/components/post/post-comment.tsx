@@ -36,7 +36,7 @@ const CommentReply = ({
 	const user = useUserStore.use.user();
 	useEffect(() => {
 		if (user) {
-			_get(`/api/v1/posts/${postId}/comments/${replyData.id}/checkvoted`)
+			_get(`/api/v1/posts/${postId}/comments/${replyData.id}/vote/check`)
 				.then(({ voted }) => {
 					setHasVoted(voted);
 				})
@@ -49,7 +49,7 @@ const CommentReply = ({
 
 	const handleUpVoteComment = () => {
 		setIsLoading(true);
-		_post(`api/v1/posts/${postId}/comments/${replyData.id}/upvote`)
+		_post(`api/v1/posts/${postId}/comments/${replyData.id}/vote/up`)
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -74,7 +74,7 @@ const CommentReply = ({
 	};
 	const handleDownVoteComment = () => {
 		setIsLoading(true);
-		_post(`api/v1/posts/${postId}/comments/${replyData.id}/downvote`)
+		_post(`api/v1/posts/${postId}/comments/${replyData.id}/vote/down`)
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");
@@ -257,7 +257,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
-			_get(`/api/v1/posts/${postId}/comments/${commentData.id}/checkvoted`)
+			_get(`/api/v1/posts/${postId}/comments/${commentData.id}/vote/check`)
 				.then(({ voted }) => {
 					setHasVoted(voted);
 				})
@@ -282,7 +282,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 
 	const handleUpVoteComment = () => {
 		setIsVoting(true);
-		_post(`api/v1/posts/${postId}/comments/${commentData.id}/upvote`)
+		_post(`api/v1/posts/${postId}/comments/${commentData.id}/vote/up`)
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -307,7 +307,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	};
 	const handleDownVoteComment = () => {
 		setIsVoting(true);
-		_post(`api/v1/posts/${postId}/comments/${commentData.id}/downvote`)
+		_post(`api/v1/posts/${postId}/comments/${commentData.id}/vote/down`)
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");

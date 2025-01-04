@@ -166,7 +166,7 @@ export const Logo = () => {
 								{authors.map((a, i) =>
 									i < authors.length - 1 ? (
 										<ProgressLink
-											href={`user/${a.id}`}
+											href={`/user/${a.id}`}
 											className='my-1 flex w-full flex-row items-center space-x-2 p-1'
 											key={a.id}>
 											<Avatar className='h-9 w-9'>
@@ -179,7 +179,7 @@ export const Logo = () => {
 										</ProgressLink>
 									) : (
 										<ProgressLink
-											href={`user/${a.id}`}
+											href={`/user/${a.id}`}
 											className='my-1 flex w-full flex-row items-center space-x-2 p-1'
 											key={a.id}
 											ref={lastAuthorRef}>
