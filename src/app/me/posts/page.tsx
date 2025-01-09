@@ -1,10 +1,17 @@
 import { PostScroller } from "@/components/scrollers/post-scroller";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { BACKEND_DOMAIN } from "@/constants";
 import { TPostData } from "@/types/post";
 import { TUserOverview } from "@/types/user";
-import { BadgePlus, NotebookText, Plus, ThumbsDown, ThumbsUp, User } from "lucide-react";
+import {
+	NotebookText,
+	Rss,
+	ShieldCheck,
+	ThumbsDown,
+	ThumbsUp,
+	User,
+	UserRoundCheck,
+} from "lucide-react";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
@@ -56,67 +63,93 @@ const MyPosts = async () => {
 						<h2 className='text-xl font-bold '>{userOverview.name}</h2>
 						<p className='truncate text-sm text-muted-foreground'>{userOverview.email}</p>
 					</div>
-					<p className='my-3 text-sm italic sm:text-base'>{userOverview.bio}</p>
-					<div className='my-1 hidden gap-8 text-muted-foreground sm:flex'>
+					<p className='my-3 text-sm italic text-muted-foreground sm:text-base'>
+						{userOverview.bio}
+					</p>
+					<div className='my-1 hidden gap-6 text-sm text-muted-foreground sm:flex'>
 						<div
-							className='flex flex-col items-center gap-y-2 text-sm font-semibold'
-							title='Total post'>
-							<NotebookText className='h-7 w-7 sm:h-8 sm:w-8' />
-							<span>{userOverview.total_posts}</span>
-						</div>
-						<div
-							className='flex flex-col items-center gap-y-2 text-sm font-semibold'
+							className='flex w-fit flex-col items-center gap-y-2'
 							title='Joined date'>
-							<BadgePlus className='h-7 w-7 sm:h-8 sm:w-8' />
-							<span>
+							<ShieldCheck className='h-7 w-7 stroke-[1.5]' />
+							<span className='text-center'>
 								{new Date(userOverview.created_at).toLocaleDateString("en-us", {
 									dateStyle: "medium",
 								})}
 							</span>
 						</div>
 						<div
-							className='flex flex-col items-center gap-y-2 text-sm font-semibold'
-							title='Total up voted'>
-							<ThumbsUp className='h-7 w-7 sm:h-8 sm:w-8' />
-							<span>{userOverview.total_upvoted}</span>
+							className='flex w-fit flex-col items-center gap-y-2'
+							title='total posts'>
+							<NotebookText className='h-7 w-7 stroke-[1.5]' />
+							<span className='text-center'>{userOverview.total_posts} posts</span>
 						</div>
 						<div
-							className='flex flex-col items-center gap-y-2 text-sm font-semibold'
-							title='Total down voted'>
-							<ThumbsDown className='h-7 w-7 sm:h-8 sm:w-8' />
-							<span>{userOverview.total_downvoted}</span>
+							className='flex w-fit flex-col items-center gap-y-2'
+							title='follower'>
+							<UserRoundCheck className='h-7 w-7 stroke-[1.5]' />
+							<span className='text-center'>{userOverview.follower}</span>
+						</div>
+						<div
+							className='flex w-fit flex-col items-center gap-y-2'
+							title='following'>
+							<Rss className='h-7 w-7 stroke-[1.5]' />
+							<span className='text-center'>{userOverview.following}</span>
+						</div>
+						<div
+							className='flex w-fit flex-col items-center gap-y-2'
+							title='total upvote'>
+							<ThumbsUp className='h-7 w-7 stroke-[1.5]' />
+							<span className='text-center'>{userOverview.total_upvoted}</span>
+						</div>
+						<div
+							className='flex w-fit flex-col items-center gap-y-2'
+							title='total downvote'>
+							<ThumbsDown className='h-7 w-7 stroke-[1.5]' />
+							<span className='text-center'>{userOverview.total_downvoted}</span>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div className='my-5 flex w-full justify-center gap-8 text-muted-foreground sm:hidden'>
+			<div className='my-5 flex w-full justify-center gap-5 text-sm text-muted-foreground sm:hidden'>
 				<div
-					className='flex flex-col items-center gap-y-2 text-sm font-semibold'
-					title='Total post'>
-					<NotebookText className='h-7 w-7 sm:h-8 sm:w-8' />
-					<span>{userOverview.total_posts}</span>
-				</div>
-				<div
-					className='flex flex-col items-center gap-y-2 text-sm font-semibold'
+					className='flex w-fit flex-col items-center gap-y-2'
 					title='Joined date'>
-					<BadgePlus className='h-7 w-7 sm:h-8 sm:w-8' />
-					<span>
+					<ShieldCheck className='h-6 w-6 stroke-[1.5]' />
+					<span className='text-center'>
 						{new Date(userOverview.created_at).toLocaleDateString("en-us", {
 							dateStyle: "medium",
 						})}
 					</span>
 				</div>
 				<div
-					className='flex flex-col items-center gap-y-2 text-sm font-semibold'
-					title='Total up voted'>
-					<ThumbsUp className='h-7 w-7 sm:h-8 sm:w-8' />
-					<span>{userOverview.total_upvoted}</span>
+					className='flex w-fit flex-col items-center gap-y-2'
+					title='total posts'>
+					<NotebookText className='h-6 w-6 stroke-[1.5]' />
+					<span className='text-center'>{userOverview.total_posts} posts</span>
 				</div>
 				<div
-					className='flex flex-col items-center gap-y-2 text-sm font-semibold'
-					title='Total down voted'>
-					<ThumbsDown className='h-7 w-7 sm:h-8 sm:w-8' />
-					<span>{userOverview.total_downvoted}</span>
+					className='flex w-fit flex-col items-center gap-y-2'
+					title='follower'>
+					<UserRoundCheck className='h-6 w-6 stroke-[1.5]' />
+					<span className='text-center'>{userOverview.follower}</span>
+				</div>
+				<div
+					className='flex w-fit flex-col items-center gap-y-2'
+					title='following'>
+					<Rss className='h-6 w-6 stroke-[1.5]' />
+					<span className='text-center'>{userOverview.following}</span>
+				</div>
+				<div
+					className='flex w-fit flex-col items-center gap-y-2'
+					title='total upvote'>
+					<ThumbsUp className='h-6 w-6 stroke-[1.5]' />
+					<span className='text-center'>{userOverview.total_upvoted}</span>
+				</div>
+				<div
+					className='flex w-fit flex-col items-center gap-y-2'
+					title='total downvote'>
+					<ThumbsDown className='h-6 w-6 stroke-[1.5]' />
+					<span className='text-center'>{userOverview.total_downvoted}</span>
 				</div>
 			</div>
 

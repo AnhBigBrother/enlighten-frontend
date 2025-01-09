@@ -13,7 +13,6 @@ import { _delete, _get, _post } from "@/lib/fetch";
 import useUserStore from "@/stores/user-store";
 import { TUserOverview } from "@/types/user";
 import {
-	BadgePlus,
 	NotebookText,
 	Rss,
 	ShieldCheck,
@@ -128,7 +127,9 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 							</Button>
 						)}
 					</div>
-					<p className='my-3 text-sm italic sm:text-base'>{userOverview.bio}</p>
+					<p className='my-3 text-sm italic text-muted-foreground sm:text-base'>
+						{userOverview.bio}
+					</p>
 					<div className='my-1 hidden gap-6 text-sm text-muted-foreground sm:flex'>
 						<div
 							className='flex w-fit flex-col items-center gap-y-2'
