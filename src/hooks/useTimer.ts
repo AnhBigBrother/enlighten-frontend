@@ -1,3 +1,5 @@
+"use client";
+
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 export const useTimer = (duration: number, startTime?: number, stopTime?: number) => {

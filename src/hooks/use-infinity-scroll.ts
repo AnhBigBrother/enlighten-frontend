@@ -1,3 +1,5 @@
+"use client";
+
 import { _get } from "@/lib/fetch";
 import { useCallback, useEffect, useRef, useState } from "react";
 
