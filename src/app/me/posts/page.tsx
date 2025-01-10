@@ -24,17 +24,14 @@ const MyPosts = async () => {
 		redirect("/");
 	}
 
-	const getMyOverview: Promise<TUserOverview> = await fetch(
-		`${BACKEND_DOMAIN}/api/v1/me/overview`,
-		{
-			headers: {
-				authorization: `Bearer ${access_token}`,
-			},
+	const getMyOverview: Promise<TUserOverview> = fetch(`${BACKEND_DOMAIN}/api/v1/me/overview`, {
+		headers: {
+			authorization: `Bearer ${access_token}`,
 		},
-	)
+	})
 		.then((res) => res.json())
 		.catch((err) => notFound());
-	const getMyPosts: Promise<TPostData[]> = await fetch(
+	const getMyPosts: Promise<TPostData[]> = fetch(
 		`${BACKEND_DOMAIN}/api/v1/me/posts?sort=new&limit=5&offset=0`,
 		{
 			headers: {
@@ -45,14 +42,14 @@ const MyPosts = async () => {
 		.then((res) => res.json())
 		.catch((err) => redirect("/"));
 
-	const [userOverview, userPosts] = await Promise.all([getMyOverview, getMyPosts]);
+	const [myOverview, myPosts] = await Promise.all([getMyOverview, getMyPosts]);
 
 	return (
 		<div className='my-10 flex w-full flex-col'>
 			<div className='flex w-full flex-row gap-5'>
 				<div className='aspect-square h-fit w-1/4 min-w-32 max-w-48 flex-shrink-0'>
 					<Avatar className='h-full w-full rounded-lg'>
-						<AvatarImage src={userOverview.image}></AvatarImage>
+						<AvatarImage src={myOverview.image}></AvatarImage>
 						<AvatarFallback>
 							<User className='h-full w-full bg-accent p-2' />
 						</AvatarFallback>
@@ -60,11 +57,11 @@ const MyPosts = async () => {
 				</div>
 				<div className='flex flex-grow flex-col pt-2'>
 					<div className='flex max-w-48 flex-col sm:max-w-full'>
-						<h2 className='text-xl font-bold '>{userOverview.name}</h2>
-						<p className='truncate text-sm text-muted-foreground'>{userOverview.email}</p>
+						<h2 className='text-xl font-bold '>{myOverview.name}</h2>
+						<p className='truncate text-sm text-muted-foreground'>{myOverview.email}</p>
 					</div>
 					<p className='my-3 text-sm italic text-muted-foreground sm:text-base'>
-						{userOverview.bio}
+						{myOverview.bio}
 					</p>
 					<div className='my-1 hidden gap-6 text-sm text-muted-foreground sm:flex'>
 						<div
@@ -72,7 +69,7 @@ const MyPosts = async () => {
 							title='Joined date'>
 							<ShieldCheck className='h-7 w-7 stroke-[1.5]' />
 							<span className='text-center'>
-								{new Date(userOverview.created_at).toLocaleDateString("en-us", {
+								{new Date(myOverview.created_at).toLocaleDateString("en-us", {
 									dateStyle: "medium",
 								})}
 							</span>
@@ -81,31 +78,31 @@ const MyPosts = async () => {
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='total posts'>
 							<NotebookText className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{userOverview.total_posts} posts</span>
+							<span className='text-center'>{myOverview.total_posts} posts</span>
 						</div>
 						<div
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='follower'>
 							<UserRoundCheck className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{userOverview.follower}</span>
+							<span className='text-center'>{myOverview.follower}</span>
 						</div>
 						<div
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='following'>
 							<Rss className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{userOverview.following}</span>
+							<span className='text-center'>{myOverview.following}</span>
 						</div>
 						<div
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='total upvote'>
 							<ThumbsUp className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{userOverview.total_upvoted}</span>
+							<span className='text-center'>{myOverview.total_upvoted}</span>
 						</div>
 						<div
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='total downvote'>
 							<ThumbsDown className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{userOverview.total_downvoted}</span>
+							<span className='text-center'>{myOverview.total_downvoted}</span>
 						</div>
 					</div>
 				</div>
@@ -116,7 +113,7 @@ const MyPosts = async () => {
 					title='Joined date'>
 					<ShieldCheck className='h-6 w-6 stroke-[1.5]' />
 					<span className='text-center'>
-						{new Date(userOverview.created_at).toLocaleDateString("en-us", {
+						{new Date(myOverview.created_at).toLocaleDateString("en-us", {
 							dateStyle: "medium",
 						})}
 					</span>
@@ -125,38 +122,38 @@ const MyPosts = async () => {
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='total posts'>
 					<NotebookText className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{userOverview.total_posts} posts</span>
+					<span className='text-center'>{myOverview.total_posts} posts</span>
 				</div>
 				<div
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='follower'>
 					<UserRoundCheck className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{userOverview.follower}</span>
+					<span className='text-center'>{myOverview.follower}</span>
 				</div>
 				<div
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='following'>
 					<Rss className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{userOverview.following}</span>
+					<span className='text-center'>{myOverview.following}</span>
 				</div>
 				<div
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='total upvote'>
 					<ThumbsUp className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{userOverview.total_upvoted}</span>
+					<span className='text-center'>{myOverview.total_upvoted}</span>
 				</div>
 				<div
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='total downvote'>
 					<ThumbsDown className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{userOverview.total_downvoted}</span>
+					<span className='text-center'>{myOverview.total_downvoted}</span>
 				</div>
 			</div>
 
 			<PostScroller
 				className='mt-2'
 				path={`/api/v1/me/posts`}
-				serverLoadedPosts={userPosts}
+				serverLoadedPosts={myPosts}
 				label={<h1 className='font-bold'>Your posts:</h1>}
 			/>
 		</div>

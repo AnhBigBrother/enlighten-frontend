@@ -55,8 +55,8 @@ export async function DELETE(req: NextRequest) {
 	const searchParams = req.nextUrl.searchParams;
 	const cookieStore = await cookies();
 	for (let pair of searchParams.entries()) {
-		const [key, value] = pair;
-		cookieStore.set(key, value, {
+		const [key] = pair;
+		cookieStore.set(key, "", {
 			httpOnly: true,
 			secure: true,
 			sameSite: "strict",

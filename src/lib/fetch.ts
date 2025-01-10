@@ -41,14 +41,26 @@ const handleTokenRotation = async (path: string, method: Methods, options?: Opti
 		const res2 = await request("api/v1/me/access_token", "GET");
 		const data2 = await res2.json();
 
-		if (!res2.ok || !data2.access_token || !data2.refresh_token) throw data2;
+		if (!res2.ok || !data2.access_token || !data2.refresh_token) {
+			console.log("first");
+			fetch(`/api/setCookies?access_token=&refresh_token=`, {
+				method: "DELETE",
+			});
+			throw data2;
+		}
 		const { access_token, refresh_token } = data2;
 
 		options = { ...options, authorization: `Bearer ${access_token}` };
 		const res3 = await request(path, method, options);
 		const data3 = await res3.json();
 
-		if (!res3.ok) throw data3;
+		if (!res3.ok) {
+			console.log("first");
+			fetch(`/api/setCookies?access_token=&refresh_token=`, {
+				method: "DELETE",
+			});
+			throw data3;
+		}
 
 		fetch(`/api/setCookies?access_token=${access_token}&refresh_token=${refresh_token}`, {
 			method: "POST",

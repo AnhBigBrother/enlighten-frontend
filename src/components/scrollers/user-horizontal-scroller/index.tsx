@@ -45,7 +45,7 @@ export const UserHorizontalScroller = ({
 
 	return (
 		<div
-			className={cn("flex w-full flex-col gap-2", className)}
+			className={cn("z-0 flex w-full flex-col gap-2", className)}
 			ref={ref}
 			{...attributes}>
 			{label}
@@ -53,19 +53,19 @@ export const UserHorizontalScroller = ({
 				{isOverflowed && (
 					<>
 						<span
-							className='absolute left-0 top-0 z-10 flex h-24 w-24 cursor-pointer items-center justify-start rounded-l-lg bg-gradient-to-r from-secondary/100 via-secondary/45 to-secondary/0 px-2 text-muted-foreground hover:via-secondary/60 hover:text-primary sm:h-36'
+							className='absolute left-0 top-0 z-10 flex h-24 w-16 cursor-pointer items-center justify-start rounded-l-lg bg-gradient-to-r from-secondary/100 via-secondary/45 to-secondary/0 px-2 text-muted-foreground hover:w-20 hover:via-secondary/60 hover:text-primary sm:h-36'
 							onClick={() => handleScroll(-540)}>
 							<ChevronLeft />
 						</span>
 						<span
-							className='absolute right-0 top-0 z-10 flex h-24 w-24 cursor-pointer items-center justify-end rounded-r-lg bg-gradient-to-l from-secondary/100 via-secondary/45 to-secondary/0 px-2 text-muted-foreground hover:via-secondary/60 hover:text-primary sm:h-36'
+							className='absolute right-0 top-0 z-10 flex h-24 w-16 cursor-pointer items-center justify-end rounded-r-lg bg-gradient-to-l from-secondary/100 via-secondary/45 to-secondary/0 px-2 text-muted-foreground hover:w-20 hover:via-secondary/60 hover:text-primary sm:h-36'
 							onClick={() => handleScroll(540)}>
 							<ChevronRight />
 						</span>
 					</>
 				)}
 				<div
-					className='flex w-full items-center justify-start gap-x-5 overflow-hidden scroll-smooth rounded-lg'
+					className='no-scrollbar flex w-full items-center justify-start gap-x-5 overflow-auto scroll-smooth rounded-lg'
 					ref={scrollAreaRef}>
 					{authors.map((a, i) =>
 						i < authors.length - 1 ? (

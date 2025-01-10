@@ -15,17 +15,15 @@ import {
 import { Input, PasswordInput } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { _post } from "@/lib/fetch";
+import { _patch } from "@/lib/fetch";
 import { MyProfileDTO, MyProfileSchema } from "@/schemas/my-profile";
 import { TUserInfo } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const UpdateProfileForm = ({ userData }: { userData: TUserInfo }) => {
-	const router = useRouter();
 	const { toast } = useToast();
 	const [isPending, setIsPending] = useState<boolean>(false);
 	const form = useForm<MyProfileDTO>({
@@ -40,7 +38,7 @@ const UpdateProfileForm = ({ userData }: { userData: TUserInfo }) => {
 	});
 	const onSubmit = async (data: MyProfileDTO) => {
 		setIsPending(true);
-		_post("api/v1/me", {
+		_patch("api/v1/me", {
 			body: {
 				name: data.name,
 				image: data.image,
@@ -48,12 +46,12 @@ const UpdateProfileForm = ({ userData }: { userData: TUserInfo }) => {
 				bio: data.bio,
 			},
 		})
-			.then(() => {
+			.then(({ access_token, refresh_token }) => {
 				toast({
 					title: "Success",
 					description: "Your profile has been updated successfully.",
 				});
-				router.push("/");
+				window.location.href = `/api/setCookies?access_token=${access_token}&refresh_token=${refresh_token}`;
 			})
 			.catch((err) => {
 				console.error(err);

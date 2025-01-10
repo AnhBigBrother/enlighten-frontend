@@ -36,7 +36,6 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 		if (user) {
 			_get(`api/v1/users/${userOverview.id}/follows/check`)
 				.then((fol) => {
-					console.log(fol);
 					setIsFollowed(true);
 				})
 				.catch((err) => setIsFollowed(false));
