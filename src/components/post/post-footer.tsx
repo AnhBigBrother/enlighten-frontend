@@ -101,9 +101,9 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 						disabled={isVoting}
 						onClick={(e) => handleClickUpVote(e)}
 						className={cn(
-							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent disabled:text-muted-foreground",
+							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent hover:text-primary disabled:text-muted-foreground",
 							{
-								"text-blue-500": user && hasVoted === "up",
+								"bg-secondary text-primary": user && hasVoted === "up",
 							},
 						)}>
 						<ArrowBigUp className='h-5 w-5' />
@@ -113,9 +113,9 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 						disabled={isVoting}
 						onClick={(e) => handleClickDownVote(e)}
 						className={cn(
-							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent disabled:text-muted-foreground",
+							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent hover:text-primary disabled:text-muted-foreground",
 							{
-								"text-blue-500": user && hasVoted === "down",
+								"bg-secondary text-primary": user && hasVoted === "down",
 							},
 						)}>
 						<ArrowBigDown className='h-5 w-5' />
@@ -124,19 +124,19 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 				</div>
 				<button
 					onClick={() => router.push(`/post/${id}`)}
-					className='flex h-full flex-row items-center space-x-1 rounded-xl border px-2 hover:bg-accent'>
+					className='flex h-full flex-row items-center space-x-1 rounded-xl border px-2 hover:bg-accent hover:text-primary'>
 					<MessageSquare className='h-5 w-5' />
 					<span>{comments_count}</span>
 				</button>
 				<button
 					onClick={() => handleClickSave()}
-					className='flex h-full flex-row items-center space-x-1 rounded-xl border px-2 hover:bg-accent'>
+					className='flex h-full flex-row items-center space-x-1 rounded-xl border px-2 hover:bg-accent hover:text-primary'>
 					<Bookmark className='h-5 w-5' />
 					<span className='hidden sm:inline-block'>Save</span>
 				</button>
 				<button
 					onClick={() => handleClickShare()}
-					className='flex h-full flex-row items-center space-x-1 rounded-xl border px-2 hover:bg-accent'>
+					className='flex h-full flex-row items-center space-x-1 rounded-xl border px-2 hover:bg-accent hover:text-primary'>
 					<PiShareFat className='h-5 w-5' />
 					<span className='hidden sm:inline-block'>Share</span>
 				</button>

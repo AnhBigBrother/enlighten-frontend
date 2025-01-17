@@ -289,13 +289,13 @@ export const SudokuBoard = () => {
 								</div>
 								<div className='flex w-fit flex-shrink-0 flex-row items-center gap-3 text-sm'>
 									<button
-										className='flex items-end border-none px-0 outline-none hover:text-blue-500 hover:underline'
+										className='flex items-end border-none px-0 outline-none hover:text-primary hover:underline'
 										onClick={() => handleClear()}>
 										<FaEraser className='mr-1 h-5 w-5' />
 										<span>Clear</span>
 									</button>
 									<button
-										className='flex items-end border-none px-0 outline-none hover:text-blue-500 hover:underline'
+										className='flex items-end border-none px-0 outline-none hover:text-primary hover:underline'
 										onClick={() => handleHint()}>
 										<LucideCircleHelp className='mr-1 h-5 w-5' />
 										<span>Hint</span>

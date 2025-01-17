@@ -18,6 +18,7 @@ import useUserStore from "@/stores/user-store";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/_shared/spinner";
 import { useOnScrollIn } from "@/hooks/use-on-scroll-in";
+import { ProgressLink } from "@/components/_shared/progress-link";
 
 const CommentReply = ({
 	postId,
@@ -34,6 +35,7 @@ const CommentReply = ({
 	const [downVoted, setDownVoted] = useState<number>(replyData.down_voted);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const user = useUserStore.use.user();
+
 	useEffect(() => {
 		if (user) {
 			_get(`/api/v1/posts/${postId}/comments/${replyData.id}/vote/check`)
@@ -70,7 +72,7 @@ const CommentReply = ({
 				});
 				console.error(err);
 			})
-			.finally(() => setIsLoading(true));
+			.finally(() => setIsLoading(false));
 	};
 	const handleDownVoteComment = () => {
 		setIsLoading(true);
@@ -95,12 +97,14 @@ const CommentReply = ({
 				});
 				console.error(err);
 			})
-			.finally(() => setIsLoading(true));
+			.finally(() => setIsLoading(false));
 	};
 
 	return (
 		<div className='my-2 flex flex-col text-sm'>
-			<div className='flex w-full flex-row items-center space-x-2'>
+			<ProgressLink
+				href={`/user/${replyData.author_id}`}
+				className='flex w-full flex-row items-center space-x-2'>
 				<Avatar className='h-8 w-8'>
 					<AvatarImage src={replyData.author_image}></AvatarImage>
 					<AvatarFallback>
@@ -119,38 +123,38 @@ const CommentReply = ({
 						})}
 					</span>
 				</div>
-			</div>
+			</ProgressLink>
 			<div className='ml-9'>
 				<p className='mt-2 flex flex-col whitespace-pre-line'>{replyData.comment}</p>
 				<div className='mt-1 flex flex-row gap-3'>
 					<div className='flex flex-row gap-2'>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
+								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"text-blue-500": hasVoted === "up",
+									"bg-secondary text-primary": hasVoted === "up",
 								},
 							)}
 							disabled={isLoading}
 							onClick={() => handleUpVoteComment()}>
 							<ArrowBigUp className='mr-1 h-5 w-5' />
-							<span>{upVoted}</span>
+							<span className='pr-1'>{upVoted}</span>
 						</button>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
+								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"text-blue-500": hasVoted === "down",
+									"bg-secondary text-primary": hasVoted === "down",
 								},
 							)}
 							disabled={isLoading}
 							onClick={() => handleDownVoteComment()}>
 							<ArrowBigDown className='mr-1 h-5 w-5' />
-							<span>{downVoted}</span>
+							<span className='pr-1'>{downVoted}</span>
 						</button>
 					</div>
 					<button
-						className='flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500'
+						className='flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-primary'
 						onClick={() => setIsReplyOpen((pre) => !pre)}>
 						<MessageSquare className='mr-2 h-4 w-4' />
 						<span>Reply</span>
@@ -333,7 +337,9 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 
 	return (
 		<div className='flex flex-col text-sm'>
-			<div className='flex w-full flex-row items-center space-x-2'>
+			<ProgressLink
+				href={`/user/${commentData.author_id}`}
+				className='flex w-full flex-row items-center space-x-2'>
 				<Avatar className='h-8 w-8'>
 					<AvatarImage src={commentData.author_image}></AvatarImage>
 					<AvatarFallback>
@@ -352,38 +358,38 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 						})}
 					</span>
 				</div>
-			</div>
+			</ProgressLink>
 			<div className='ml-9'>
 				<p className='mt-2 flex flex-col whitespace-pre-line'>{commentData.comment}</p>
 				<div className='mt-1 flex flex-row items-center gap-3'>
 					<div className='flex flex-row gap-2'>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
+								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"text-blue-500": hasVoted === "up",
+									"bg-secondary text-primary": hasVoted === "up",
 								},
 							)}
 							disabled={isVoting}
 							onClick={() => handleUpVoteComment()}>
 							<ArrowBigUp className='mr-1 h-5 w-5' />
-							<span>{upVoted}</span>
+							<span className='pr-1'>{upVoted}</span>
 						</button>
 						<button
 							className={cn(
-								"flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500 disabled:text-muted-foreground",
+								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"text-blue-500": hasVoted === "down",
+									"bg-secondary text-primary": hasVoted === "down",
 								},
 							)}
 							disabled={isVoting}
 							onClick={() => handleDownVoteComment()}>
 							<ArrowBigDown className='mr-1 h-5 w-5' />
-							<span>{downVoted}</span>
+							<span className='pr-1'>{downVoted}</span>
 						</button>
 					</div>
 					<button
-						className='flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500'
+						className='flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-primary'
 						onClick={() => {
 							if (!isReplyOpen) {
 								setShowReplies(true);
@@ -394,7 +400,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 						<span>Reply</span>
 					</button>
 					<button
-						className='flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-blue-500'
+						className='flex h-fit flex-row items-center justify-center rounded-lg py-1 hover:text-primary'
 						onClick={() => setShowReplies((pre) => !pre)}>
 						{showReplies ? (
 							<>

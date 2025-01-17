@@ -42,7 +42,6 @@ const handleTokenRotation = async (path: string, method: Methods, options?: Opti
 		const data2 = await res2.json();
 
 		if (!res2.ok || !data2.access_token || !data2.refresh_token) {
-			console.log("first");
 			fetch(`/api/setCookies?access_token=&refresh_token=`, {
 				method: "DELETE",
 			});
@@ -55,7 +54,6 @@ const handleTokenRotation = async (path: string, method: Methods, options?: Opti
 		const data3 = await res3.json();
 
 		if (!res3.ok) {
-			console.log("first");
 			fetch(`/api/setCookies?access_token=&refresh_token=`, {
 				method: "DELETE",
 			});

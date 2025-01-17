@@ -19,7 +19,7 @@ export const Recents = () => {
 						<h3 className='px-2 font-bold'>RECENTS</h3>
 						<Button
 							variant='link'
-							className='text-blue-500'
+							className='font-semibold text-primary'
 							onClick={() => clear()}>
 							Clear
 						</Button>
