@@ -8,10 +8,12 @@ import React from "react";
 const Post = ({
 	postData,
 	className,
+	clipContent = false,
 	ref,
 	...props
 }: React.HTMLAttributes<HTMLDivElement> & {
 	postData: TPostData;
+	clipContent?: boolean;
 	ref?: React.Ref<HTMLDivElement>;
 }) => {
 	return (
@@ -29,6 +31,7 @@ const Post = ({
 			<PostContent
 				title={postData.title}
 				content={postData.content}
+				clipped={clipContent}
 			/>
 			<PostFooter
 				id={postData.id}

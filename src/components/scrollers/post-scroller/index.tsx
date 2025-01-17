@@ -20,6 +20,8 @@ export const PostScroller = ({
 	path,
 	serverLoadedPosts,
 	label,
+	sort = true,
+	clipContent = false,
 	ref,
 	className,
 	...attribute
@@ -27,6 +29,8 @@ export const PostScroller = ({
 	path: string;
 	serverLoadedPosts?: TPostData[];
 	label?: React.ReactElement;
+	sort?: boolean;
+	clipContent?: boolean;
 	ref?: React.Ref<HTMLDivElement>;
 } & React.HTMLAttributes<HTMLElement>) => {
 	const [posts, setPosts] = useState<TPostData[]>(serverLoadedPosts || []);
@@ -109,18 +113,21 @@ export const PostScroller = ({
 			ref={ref}>
 			<div className='flex items-center gap-3 py-2'>
 				{label}
-				<SortBy
-					state={sortedState}
-					setState={setSortedState}
-					arr={arr}
-				/>
+				{sort && (
+					<SortBy
+						state={sortedState}
+						setState={setSortedState}
+						arr={arr}
+					/>
+				)}
 			</div>
 			<div className='flex flex-col space-y-3'>
 				{posts.map((p) => (
 					<Post
+						key={p.id}
 						className='rounded-lg border p-3'
 						postData={p}
-						key={p.id}
+						clipContent={clipContent}
 					/>
 				))}
 			</div>

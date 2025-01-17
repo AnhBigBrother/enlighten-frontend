@@ -38,7 +38,7 @@ const CommentReply = ({
 
 	useEffect(() => {
 		if (user) {
-			_get(`/api/v1/posts/${postId}/comments/${replyData.id}/vote/check`)
+			_get(`/api/v1/posts/${postId}/comments/${replyData.id}/check`)
 				.then(({ voted }) => {
 					setHasVoted(voted);
 				})
@@ -261,7 +261,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
-			_get(`/api/v1/posts/${postId}/comments/${commentData.id}/vote/check`)
+			_get(`/api/v1/posts/${postId}/comments/${commentData.id}/check`)
 				.then(({ voted }) => {
 					setHasVoted(voted);
 				})

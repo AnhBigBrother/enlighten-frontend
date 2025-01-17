@@ -12,22 +12,29 @@ type PostHeaderProps = {
 	linkPost?: string;
 };
 
-export const PostHeader = (props: PostHeaderProps) => {
+export const PostHeader = ({
+	postId,
+	authorId,
+	authorName,
+	authorImage,
+	createdAt,
+	linkPost,
+}: PostHeaderProps) => {
 	return (
 		<div className='flex w-full flex-row items-center justify-between'>
 			<ProgressLink
 				className='flex flex-row items-center space-x-3'
-				href={`/user/${props.authorId}`}>
+				href={`/user/${authorId}`}>
 				<Avatar>
-					<AvatarImage src={props.authorImage}></AvatarImage>
+					<AvatarImage src={authorImage}></AvatarImage>
 					<AvatarFallback>
 						<User className='h-full w-full cursor-pointer bg-accent p-2' />
 					</AvatarFallback>
 				</Avatar>
 				<div className='flex flex-col items-start justify-center text-sm'>
-					<h4 className='font-bold'>{props.authorName}</h4>
+					<h4 className='font-bold'>{authorName}</h4>
 					<p className='font-light text-muted-foreground'>
-						{new Date(props.createdAt).toLocaleTimeString("en-us", {
+						{new Date(createdAt).toLocaleTimeString("en-us", {
 							year: "numeric",
 							month: "short",
 							day: "numeric",
@@ -37,14 +44,16 @@ export const PostHeader = (props: PostHeaderProps) => {
 					</p>
 				</div>
 			</ProgressLink>
-			{props.linkPost && (
-				<ProgressLink
-					className=' aspect-square h-full p-2 text-muted-foreground hover:text-primary'
-					title='Go to post'
-					href={props.linkPost}>
-					<ChevronRight />
-				</ProgressLink>
-			)}
+			<div className='flex h-full flex-row space-x-2 p-2'>
+				{linkPost && (
+					<ProgressLink
+						className=' aspect-square text-muted-foreground hover:text-primary'
+						title='Go to post'
+						href={linkPost}>
+						<ChevronRight />
+					</ProgressLink>
+				)}
+			</div>
 		</div>
 	);
 };
