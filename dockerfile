@@ -16,10 +16,8 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-RUN mkdir .next
-
 COPY --from=builder /app/.next/standalone ./
-
+COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
 

@@ -28,6 +28,7 @@ const UserPage = async ({ params }: { params: Promise<{ userId: string }> }) => 
 			<PostScroller
 				path={`api/v1/users/${userId}/posts`}
 				serverLoadedPosts={userPosts}
+				clipContent
 				label={<h1 className='font-bold'>User Posts:</h1>}
 				className='mt-3'
 			/>
