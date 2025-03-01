@@ -9,10 +9,11 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronsUpDown } from "lucide-react";
+import { SortType } from "@/actions/grpc/_utils";
 
 export type TSortItem = {
 	label: string;
-	value: string;
+	value: SortType;
 };
 
 export const SortBy = ({

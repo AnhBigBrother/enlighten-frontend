@@ -1,10 +1,11 @@
 "use client";
 
+import { GetTopUsers } from "@/actions/grpc/public";
 import { ProgressLink } from "@/components/_shared/progress-link";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { UserBaseInfo } from "@/grpc/protobuf/types";
 import { useInfinityScroll } from "@/hooks/use-infinity-scroll";
 import { cn } from "@/lib/utils";
-import { TAuthor } from "@/types/user";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { ChevronLeft, ChevronRight, User } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -20,9 +21,9 @@ export const UserHorizontalScroller = ({
 } & React.HTMLAttributes<HTMLElement>) => {
 	const scrollAreaRef = useRef<HTMLDivElement>(null);
 	const [isOverflowed, setIsOverflowed] = useState<boolean>(false);
-	const [authors, lastAuthorRef, isLoadingAuthor] = useInfinityScroll<TAuthor>(
-		"api/v1/users/all",
-		5,
+	const [authors, lastAuthorRef, isLoadingAuthor] = useInfinityScroll<UserBaseInfo>(
+		GetTopUsers,
+		3,
 		[],
 	);
 
@@ -72,10 +73,10 @@ export const UserHorizontalScroller = ({
 							<ProgressLink
 								href={`/user/${a.id}`}
 								key={a.id}>
-								<Avatar className='h-24 w-24 rounded-lg sm:h-36 sm:w-36'>
+								<Avatar className='h-24 w-24 rounded-lg border sm:h-36 sm:w-36'>
 									<AvatarImage src={a.image}></AvatarImage>
 									<AvatarFallback>
-										<User className='h-full w-full bg-accent p-2' />
+										<User className='h-24 w-24 rounded-lg bg-gradient-to-br from-secondary to-background p-2 sm:h-36 sm:w-36' />
 									</AvatarFallback>
 								</Avatar>
 								<h3 className='mt-2 w-24 truncate px-2 text-center font-bold sm:w-36'>
@@ -87,10 +88,10 @@ export const UserHorizontalScroller = ({
 								href={`/user/${a.id}`}
 								key={a.id}
 								ref={lastAuthorRef}>
-								<Avatar className='h-24 w-24 rounded-lg sm:h-36 sm:w-36'>
+								<Avatar className='h-24 w-24 rounded-lg border sm:h-36 sm:w-36'>
 									<AvatarImage src={a.image}></AvatarImage>
 									<AvatarFallback>
-										<User className='h-full w-full bg-accent p-2' />
+										<User className='h-24 w-24 rounded-lg bg-gradient-to-br from-secondary to-background p-2 sm:h-36 sm:w-36' />
 									</AvatarFallback>
 								</Avatar>
 								<h3 className='mt-2 w-24 truncate px-2 text-center font-bold sm:w-36'>

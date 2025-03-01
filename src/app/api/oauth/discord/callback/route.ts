@@ -1,11 +1,13 @@
+import { OauthDiscord } from "@/actions/grpc/oauth";
 import {
-	BACKEND_DOMAIN,
+	COOKIE_AGE,
 	DISCORD_CLIENT_ID,
 	DISCORD_CLIENT_SECRET,
 	DISCORD_GET_TOKEN_URL,
 	DISCORD_REDIRECT_URI,
-	FRONTEND_DOMAIN,
+	FRONTEND_URL,
 } from "@/constants";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -19,7 +21,7 @@ export async function GET(req: NextRequest) {
 		url.searchParams.set("redirect_uri", DISCORD_REDIRECT_URI);
 		url.searchParams.set("grant_type", "authorization_code");
 
-		const token = await fetch(url, {
+		const token: { token_type: string; access_token: string } = await fetch(url, {
 			method: "POST",
 			headers: {
 				"content-type": "application/x-www-form-urlencoded",
@@ -28,11 +30,35 @@ export async function GET(req: NextRequest) {
 			body: url.searchParams.toString(),
 		}).then((res) => res.json());
 
-		return NextResponse.redirect(
-			`${BACKEND_DOMAIN}/api/v1/auth/discord?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_DOMAIN}/api/setCookies`,
-		);
+		// call backend service to sign in and get access_token & refresh_token
+		const res = await OauthDiscord(token.access_token, token.token_type);
+
+		if (res.error || !res.data) {
+			throw res.error;
+		}
+
+		if (res.data.access_token === "" && res.data.refresh_token === "") {
+			return NextResponse.redirect(
+				`${FRONTEND_URL}/signup?email=${res.data.user?.email}&name=${res.data.user?.name}&image=${res.data.user?.image}`,
+			);
+		}
+
+		const cookieStore = await cookies();
+		cookieStore.set("access_token", res.data.access_token, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "strict",
+			maxAge: COOKIE_AGE,
+		});
+		cookieStore.set("refresh_token", res.data.refresh_token, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "strict",
+			maxAge: COOKIE_AGE,
+		});
+		return NextResponse.redirect(FRONTEND_URL);
 	} catch (error) {
 		console.error(error);
-		return NextResponse.redirect(FRONTEND_DOMAIN);
+		return NextResponse.redirect(FRONTEND_URL);
 	}
 }

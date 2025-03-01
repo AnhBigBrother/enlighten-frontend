@@ -1,5 +1,6 @@
 "use client";
 
+import { CreatePost } from "@/actions/grpc/post";
 import { PostContent } from "@/components/post/post-content";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,21 +13,34 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { _post } from "@/lib/fetch";
-import { CreatePostDTO, CreatePostSchema } from "@/schemas/create-post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type ShowType = "preview" | "raw";
+
+const CreatePostSchema = z.object({
+	title: z
+		.string()
+		.min(1, {
+			message: "Please fill out this field.",
+		})
+		.max(300, {
+			message: "Title too long, please write less than 300 characters.",
+		}),
+	content: z.string().min(1, {
+		message: "Please fill out this field.",
+	}),
+});
 
 const CreatePostForm = () => {
 	const router = useRouter();
 	const { toast } = useToast();
 	const [showType, setShowType] = useState<ShowType>("raw");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const form = useForm<CreatePostDTO>({
+	const form = useForm<z.infer<typeof CreatePostSchema>>({
 		resolver: zodResolver(CreatePostSchema),
 		defaultValues: {
 			title: "Your post's title",
@@ -35,11 +49,15 @@ const CreatePostForm = () => {
 		},
 	});
 
-	const createPost = async (data: CreatePostDTO) => {
+	const createPost = async (data: z.infer<typeof CreatePostSchema>) => {
 		setIsLoading(true);
-		await _post("api/v1/posts/create", {
-			body: data,
-		})
+		await CreatePost(data.title, data.content)
+			.then((res) => {
+				if (res.error || !res.data) {
+					throw res.error;
+				}
+				return res.data.created!;
+			})
 			.then((post) => {
 				toast({
 					title: "Success",

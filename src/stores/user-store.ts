@@ -1,25 +1,18 @@
+import { GetSessionResponse } from "@/grpc/protobuf/user_service";
 import createSelectors from "@/stores/selector";
 import { create } from "zustand";
 
-export type TUser = {
-	email: string;
-	name: string;
-	image: string;
-	jti: number | string;
-	sub: "access_token" | "refresh_token";
-	exp: number;
-	iat: number;
-} | null;
+export type UserSession = GetSessionResponse | null;
 
 export type TUserStore = {
-	user: TUser;
-	update: (newUser: TUser) => void;
+	user: UserSession;
+	update: (newUser: UserSession) => void;
 	reset: () => void;
 };
 
 const useUserStoreBase = create<TUserStore>()((set) => ({
 	user: null,
-	update: (newUser: TUser) => set({ user: newUser }),
+	update: (newUser: UserSession) => set({ user: newUser }),
 	reset: () => set({ user: null }),
 }));
 const useUserStore = createSelectors(useUserStoreBase);

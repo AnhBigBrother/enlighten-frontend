@@ -1,8 +1,8 @@
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
+import { PostData } from "@/grpc/protobuf/types";
 import { cn } from "@/lib/utils";
-import { TPostData } from "@/types/post";
 import React from "react";
 
 const Post = ({
@@ -12,7 +12,7 @@ const Post = ({
 	ref,
 	...props
 }: React.HTMLAttributes<HTMLDivElement> & {
-	postData: TPostData;
+	postData: PostData;
 	clipContent?: boolean;
 	ref?: React.Ref<HTMLDivElement>;
 }) => {
@@ -22,9 +22,7 @@ const Post = ({
 			className={cn("w-full", className)}>
 			<PostHeader
 				postId={postData.id}
-				authorId={postData.author_id}
-				authorImage={postData.author_image}
-				authorName={postData.author_name}
+				author={postData.author!}
 				createdAt={postData.created_at}
 				linkPost={`/post/${postData.id}`}
 			/>
@@ -35,9 +33,9 @@ const Post = ({
 			/>
 			<PostFooter
 				id={postData.id}
-				comments_count={postData.comments_count}
-				up_voted={postData.up_voted}
-				down_voted={postData.down_voted}
+				comments_count={postData.comments}
+				up_voted={postData.upvote}
+				down_voted={postData.downvote}
 				created_at={postData.created_at}
 			/>
 		</div>

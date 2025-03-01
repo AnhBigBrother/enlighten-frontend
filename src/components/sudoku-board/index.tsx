@@ -8,7 +8,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { _get, _post } from "@/lib/fetch";
 import { cn } from "@/lib/utils";
 import React, { useState, useRef, Fragment, useEffect } from "react";
 import { FaEraser } from "react-icons/fa6";
@@ -24,6 +23,7 @@ import {
 import { useTimer } from "@/hooks/useTimer";
 import { secondToTimeString } from "@/lib/functions";
 import { checkSolvable, getHint } from "@/lib/sudoku";
+import { GenerateSudoku, SolveSudoku } from "@/actions/grpc/game";
 
 type Difficulty = {
 	label: "Hard" | "Medium" | "Easy";
@@ -166,15 +166,17 @@ export const SudokuBoard = () => {
 	const [timer, isTicking, setIsTicking, clearTimer] = useTimer(1);
 	useEffect(() => {
 		clearTimer();
-		_get("api/v1/games/sudoku", {
-			searchParams: {
-				hide: `${difficulty.value}`,
-			},
-		})
-			.then((data: { board: number[][] }) => {
-				const newBoard = data.board.map((row) => [...row]);
+		GenerateSudoku({ hide: difficulty.value })
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
+			.then((board) => {
+				const newBoard = board.map((row) => [...row]);
 				setBoard(newBoard);
-				setInitBoard(data.board);
+				setInitBoard(board);
 				setIsTicking(true);
 			})
 			.catch((err) => {
@@ -209,12 +211,14 @@ export const SudokuBoard = () => {
 		});
 	};
 	const handleSolve = () => {
-		_post("api/v1/games/sudoku", {
-			body: {
-				board: board,
-			},
-		})
-			.then(({ result }: { result: number[][] }) => {
+		SolveSudoku(board)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
+			.then((result) => {
 				setBoard(result);
 			})
 			.catch((err) => {

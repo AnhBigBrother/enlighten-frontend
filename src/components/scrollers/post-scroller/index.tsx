@@ -1,13 +1,13 @@
 "use client";
 
+import { ActionResponse, SortType } from "@/actions/grpc/_utils";
 import { SortBy, TSortItem } from "@/components/_shared/sort-by";
 import { Spinner } from "@/components/_shared/spinner";
 import { Post } from "@/components/post";
+import { PostData } from "@/grpc/protobuf/types";
 import { useOnScrollIn } from "@/hooks/use-on-scroll-in";
-import { _get } from "@/lib/fetch";
 import { cn } from "@/lib/utils";
 import useProgressStore from "@/stores/progress-store";
-import { TPostData } from "@/types/post";
 import React, { useEffect, useRef, useState } from "react";
 
 const arr: TSortItem[] = [
@@ -17,7 +17,7 @@ const arr: TSortItem[] = [
 ];
 
 export const PostScroller = ({
-	path,
+	action,
 	serverLoadedPosts,
 	label,
 	sort = true,
@@ -26,14 +26,18 @@ export const PostScroller = ({
 	className,
 	...attribute
 }: {
-	path: string;
-	serverLoadedPosts?: TPostData[];
+	action: (
+		sort: SortType,
+		limit: number,
+		offset: number,
+	) => Promise<ActionResponse<PostData[]>>;
+	serverLoadedPosts?: PostData[];
 	label?: React.ReactElement;
 	sort?: boolean;
 	clipContent?: boolean;
 	ref?: React.Ref<HTMLDivElement>;
 } & React.HTMLAttributes<HTMLElement>) => {
-	const [posts, setPosts] = useState<TPostData[]>(serverLoadedPosts || []);
+	const [posts, setPosts] = useState<PostData[]>(serverLoadedPosts || []);
 	const [sortedState, setSortedState] = useState<TSortItem>(arr[0]);
 	const [offset, setOffset] = useState<number>(serverLoadedPosts?.length || 0);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -46,14 +50,14 @@ export const PostScroller = ({
 	useEffect(() => {
 		if (hasIntersected && hasMore && !isLoading) {
 			setIsLoading(true);
-			_get(path, {
-				searchParams: {
-					sort: sortedState.value,
-					limit: "5",
-					offset: `${offset}`,
-				},
-			})
-				.then((more: TPostData[]) => {
+			action(sortedState.value, 3, offset)
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
+				.then((more) => {
 					if (more.length === 0) {
 						setHasMore(false);
 						return;
@@ -79,14 +83,14 @@ export const PostScroller = ({
 		setOffset(0);
 		setHasMore(true);
 		updateProgress(50);
-		_get(path, {
-			searchParams: {
-				sort: sortedState.value,
-				limit: "5",
-				offset: "0",
-			},
-		})
-			.then((posts: TPostData[]) => {
+		action(sortedState.value, 3, offset)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
+			.then((posts) => {
 				if (posts.length === 0) {
 					setHasMore(false);
 					return;

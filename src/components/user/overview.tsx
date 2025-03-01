@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckUserFollowed, FollowUser, UnFollowUser } from "@/actions/grpc/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,10 +9,9 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { GetUserOverviewResponse } from "@/grpc/protobuf/public_service";
 import { useToast } from "@/hooks/use-toast";
-import { _delete, _get, _post } from "@/lib/fetch";
 import useUserStore from "@/stores/user-store";
-import { TUserOverview } from "@/types/user";
 import {
 	NotebookText,
 	Rss,
@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) => {
+export const UserOverview = ({ userOverview }: { userOverview: GetUserOverviewResponse }) => {
 	const user = useUserStore.use.user();
 	const { toast } = useToast();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -34,7 +34,13 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 
 	useEffect(() => {
 		if (user) {
-			_get(`api/v1/users/${userOverview.id}/follows/check`)
+			CheckUserFollowed(userOverview.id)
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
 				.then((fol) => {
 					setIsFollowed(true);
 				})
@@ -44,7 +50,13 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 
 	const handleFollow = () => {
 		setIsLoading(true);
-		_post(`api/v1/users/${userOverview.id}/follows`)
+		FollowUser(userOverview.id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				setIsFollowed(true);
 				toast({
@@ -64,7 +76,13 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 	};
 	const handleUnfollow = () => {
 		setIsLoading(true);
-		_delete(`api/v1/users/${userOverview.id}/follows`)
+		UnFollowUser(userOverview.id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				setIsFollowed(false);
 				toast({
@@ -86,10 +104,10 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 		<>
 			<div className='flex w-full flex-row gap-5'>
 				<div className='aspect-square h-fit w-1/4 min-w-32 max-w-48 flex-shrink-0'>
-					<Avatar className='h-full w-full rounded-lg'>
+					<Avatar className='h-full w-full rounded-lg border'>
 						<AvatarImage src={userOverview.image}></AvatarImage>
 						<AvatarFallback>
-							<User className='h-full w-full bg-accent p-2' />
+							<User className='h-full w-full bg-gradient-to-br from-secondary to-background p-2' />
 						</AvatarFallback>
 					</Avatar>
 				</div>
@@ -162,13 +180,13 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='total upvote'>
 							<ThumbsUp className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{userOverview.total_upvoted}</span>
+							<span className='text-center'>{userOverview.total_upvote}</span>
 						</div>
 						<div
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='total downvote'>
 							<ThumbsDown className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{userOverview.total_downvoted}</span>
+							<span className='text-center'>{userOverview.total_downvote}</span>
 						</div>
 					</div>
 				</div>
@@ -206,13 +224,13 @@ export const UserOverview = ({ userOverview }: { userOverview: TUserOverview }) 
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='total upvote'>
 					<ThumbsUp className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{userOverview.total_upvoted}</span>
+					<span className='text-center'>{userOverview.total_upvote}</span>
 				</div>
 				<div
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='total downvote'>
 					<ThumbsDown className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{userOverview.total_downvoted}</span>
+					<span className='text-center'>{userOverview.total_downvote}</span>
 				</div>
 			</div>
 		</>

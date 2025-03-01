@@ -1,19 +1,22 @@
 "use server";
 
-import { Post } from "@/components/post";
+import { GetPostById } from "@/actions/grpc/public";
 import { PostAdditional } from "@/components/post/post-additional";
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
-import { BACKEND_DOMAIN } from "@/constants";
-import { TPostData } from "@/types/post";
 import { notFound } from "next/navigation";
 import React from "react";
 
-const PostPage = async ({ params }: { params: Promise<{ postId: string[] }> }) => {
+const PostPage = async ({ params }: { params: Promise<{ postId: string }> }) => {
 	const { postId } = await params;
-	const postData: TPostData = await fetch(`${BACKEND_DOMAIN}/api/v1/posts/${postId}`)
-		.then((res) => res.json())
+	const postData = await GetPostById(postId)
+		.then((res) => {
+			if (res.error) {
+				throw res.error;
+			}
+			return res.data!;
+		})
 		.catch((error) => {
 			return notFound();
 		});
@@ -22,9 +25,7 @@ const PostPage = async ({ params }: { params: Promise<{ postId: string[] }> }) =
 		<div className='flex w-full flex-col items-start justify-start py-5'>
 			<PostHeader
 				postId={postData.id}
-				authorId={postData.author_id}
-				authorImage={postData.author_image}
-				authorName={postData.author_name}
+				author={postData.author!}
 				createdAt={postData.created_at}
 			/>
 			<PostContent
@@ -33,21 +34,19 @@ const PostPage = async ({ params }: { params: Promise<{ postId: string[] }> }) =
 			/>
 			<PostFooter
 				id={postData.id}
-				comments_count={postData.comments_count}
-				up_voted={postData.up_voted}
-				down_voted={postData.down_voted}
+				comments_count={postData.comments}
+				up_voted={postData.upvote}
+				down_voted={postData.downvote}
 				created_at={postData.created_at}
 			/>
 			<PostAdditional
 				data={{
 					id: postData.id,
 					title: postData.title,
-					author_id: postData.author_id,
-					author_image: postData.author_image,
-					author_name: postData.author_name,
-					comment_count: postData.comments_count,
-					up_voted: postData.up_voted,
-					down_voted: postData.down_voted,
+					author: postData.author!,
+					comment_count: postData.comments,
+					up_voted: postData.upvote,
+					down_voted: postData.downvote,
 				}}
 			/>
 		</div>

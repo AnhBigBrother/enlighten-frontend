@@ -46,10 +46,10 @@ const RecentPostCard = ({ data }: { data: TRecent }) => {
 				href={`/post/${data.id}`}
 				className='flex flex-col p-2'>
 				<div className='mb-1 flex w-full flex-row items-center space-x-2'>
-					<Avatar className='h-8 w-8'>
+					<Avatar className='h-8 w-8 border'>
 						<AvatarImage src={data.author_image}></AvatarImage>
 						<AvatarFallback>
-							<User className='h-full w-full cursor-pointer bg-background p-2' />
+							<User className='h-full w-full cursor-pointer bg-gradient-to-br from-secondary to-background p-2' />
 						</AvatarFallback>
 					</Avatar>
 					<h4 className='font-bold'>{data.author_name}</h4>

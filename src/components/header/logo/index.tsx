@@ -22,17 +22,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProgressLink } from "@/components/_shared/progress-link";
 import useUserStore from "@/stores/user-store";
-import { TAuthor } from "@/types/user";
-import { _get } from "@/lib/fetch";
 import { useInfinityScroll } from "@/hooks/use-infinity-scroll";
 import { Spinner } from "@/components/_shared/spinner";
+import { UserBaseInfo } from "@/grpc/protobuf/types";
+import { GetFollowedUsers } from "@/actions/grpc/user";
 
 export const Logo = () => {
 	const user = useUserStore.use.user();
 	const sideMenu = useRef<HTMLDivElement | null>(null);
 
-	const [authors, lastAuthorRef, loadingAuthor] = useInfinityScroll<TAuthor>(
-		"api/v1/me/followed",
+	const [authors, lastAuthorRef, loadingAuthor] = useInfinityScroll<UserBaseInfo>(
+		GetFollowedUsers,
 		5,
 		[],
 		user,
@@ -169,10 +169,10 @@ export const Logo = () => {
 											href={`/user/${a.id}`}
 											className='my-1 flex w-full flex-row items-center space-x-2 p-1'
 											key={a.id}>
-											<Avatar className='h-9 w-9'>
+											<Avatar className='h-9 w-9 border'>
 												<AvatarImage src={a.image} />
 												<AvatarFallback>
-													<User className='h-full w-full cursor-pointer bg-accent p-2' />
+													<User className='h-full w-full cursor-pointer bg-gradient-to-br from-secondary to-background p-2' />
 												</AvatarFallback>
 											</Avatar>
 											<p>{a.name}</p>
@@ -183,10 +183,10 @@ export const Logo = () => {
 											className='my-1 flex w-full flex-row items-center space-x-2 p-1'
 											key={a.id}
 											ref={lastAuthorRef}>
-											<Avatar className='h-9 w-9'>
+											<Avatar className='h-9 w-9 border'>
 												<AvatarImage src={a.image} />
 												<AvatarFallback>
-													<User className='h-full w-full cursor-pointer bg-accent p-2' />
+													<User className='h-full w-full cursor-pointer bg-gradient-to-br from-secondary to-background p-2' />
 												</AvatarFallback>
 											</Avatar>
 											<p>{a.name}</p>

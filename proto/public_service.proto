@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package pb;
+
+import "types.proto";
+
+option go_package = "github.com/AnhBigBrother/enlighten-backend/internal/pb";
+
+service Public {
+  rpc SignUp(SignUpRequest) returns (SignUpResponse) {}
+  rpc SignIn(SignInRequest) returns (SignInResponse) {}
+  rpc GetAccessToken(GetAccessTokenRequest) returns (GetAccessTokenResponse) {}
+  rpc GetUserOverview(GetUserOverviewRequest)
+      returns (GetUserOverviewResponse) {}
+  rpc GetUserPosts(GetUserPostsRequest) returns (GetUserPostsResponse) {}
+  rpc GetAllPosts(GetAllPostsRequest) returns (GetAllPostsResponse) {}
+  rpc GetPostById(GetPostByIdRequest) returns (GetPostByIdResponse) {}
+  rpc GetPostComments(GetPostCommentsRequest)
+      returns (GetPostCommentsResponse) {}
+  rpc GetCommentReplies(GetCommentRepliesRequest)
+      returns (GetCommentRepliesResponse) {}
+  rpc GetTopUsers(GetTopUsersRequest) returns (GetTopUsersResponse) {}
+}
+
+message SignUpRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+  string image = 4;
+}
+message SignUpResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message SignInRequest {
+  string email = 1;
+  string password = 2;
+}
+message SignInResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message GetAccessTokenRequest { string refresh_token = 1; }
+message GetAccessTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message GetUserOverviewRequest { string user_id = 1; }
+message GetUserOverviewResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string image = 4;
+  string bio = 5;
+  uint32 total_posts = 6;
+  uint32 total_upvote = 7;
+  uint32 total_downvote = 8;
+  uint32 follower = 9;
+  uint32 following = 10;
+  uint64 created_at = 11;
+  uint64 updated_at = 12;
+}
+
+message GetUserPostsRequest {
+  string user_id = 1;
+  uint32 limit = 2;
+  uint32 offset = 3;
+  string sort = 4;
+}
+message GetUserPostsResponse { repeated PostData posts = 1; }
+
+message GetAllPostsRequest {
+  string sort = 1;
+  uint32 limit = 2;
+  uint32 offset = 3;
+}
+message GetAllPostsResponse { repeated PostData posts = 1; }
+
+message GetPostByIdRequest { string post_id = 1; }
+message GetPostByIdResponse { PostData post = 1; }
+
+message GetPostCommentsRequest {
+  string post_id = 1;
+  uint32 limit = 2;
+  uint32 offset = 3;
+}
+message GetPostCommentsResponse { repeated CommentData comments = 1; }
+
+message GetCommentRepliesRequest {
+  string post_id = 1;
+  string comment_id = 2;
+  uint32 limit = 3;
+  uint32 offset = 4;
+}
+message GetCommentRepliesResponse { repeated CommentData replies = 1; }
+
+message GetTopUsersRequest {
+  uint32 limit = 1;
+  uint32 offset = 2;
+}
+message GetTopUsersResponse { repeated UserBaseInfo users = 1; }

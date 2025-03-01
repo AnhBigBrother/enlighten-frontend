@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package pb;
+
+import "types.proto";
+
+option go_package = "github.com/AnhBigBrother/enlighten-backend/internal/pb";
+
+service Comment {
+  rpc UpVoteComment(UpVoteCommentRequest) returns (UpVoteCommentResponse) {}
+  rpc DownVoteComment(DownVoteCommentRequest)
+      returns (DownVoteCommentResponse) {}
+  rpc CheckCommentInteracted(CheckCommentInteractedRequest)
+      returns (CheckCommentInteractedResponse) {}
+  rpc ReplyComment(ReplyCommentRequest) returns (ReplyCommentResponse) {}
+}
+
+message UpVoteCommentRequest {
+  string access_token = 1;
+  string comment_id = 2;
+}
+message UpVoteCommentResponse { string message = 1; }
+
+message DownVoteCommentRequest {
+  string access_token = 1;
+  string comment_id = 2;
+}
+message DownVoteCommentResponse { string message = 1; }
+
+message CheckCommentInteractedRequest {
+  string access_token = 1;
+  string comment_id = 2;
+}
+message CheckCommentInteractedResponse { Voted voted = 1; }
+
+message ReplyCommentRequest {
+  string access_token = 1;
+  string post_id = 2;
+  string comment_id = 3;
+  string reply_body = 4;
+}
+message ReplyCommentResponse {
+  message CreatedReply {
+    string id = 1;
+    string reply = 2;
+    string author_id = 3;
+    string post_id = 4;
+    string parent_comment_id = 5;
+    uint64 created_at = 6;
+  }
+  CreatedReply created = 7;
+}

@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package pb;
+
+import "types.proto";
+
+option go_package = "github.com/AnhBigBrother/enlighten-backend/internal/pb";
+
+service Post {
+  rpc GetFollowedPosts(GetFollowedPostsRequest)
+      returns (GetFollowedPostsResponse) {}
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse) {}
+  rpc UpVotePost(UpVotePostRequest) returns (UpVotePostResponse) {}
+  rpc DownVotePost(DownVotePostRequest) returns (DownVotePostResponse) {}
+  rpc SavePost(SavePostRequest) returns (SavePostResponse) {}
+  rpc UnSavePost(UnSavePostRequest) returns (UnSavePostResponse) {}
+  rpc GetAllSavedPosts(GetAllSavedPostsRequest)
+      returns (GetAllSavedPostsResponse) {}
+  rpc CheckPostInteracted(CheckPostInteractedRequest)
+      returns (CheckPostInteractedResponse) {}
+  rpc AddPostComment(AddPostCommentRequest) returns (AddPostCommentResponse) {}
+}
+
+message GetFollowedPostsRequest {
+  string access_token = 1;
+  string sort = 2;
+  uint32 limit = 3;
+  uint32 offset = 4;
+}
+message GetFollowedPostsResponse { repeated PostData posts = 1; }
+
+message CreatePostRequest {
+  string access_token = 1;
+  string title = 2;
+  string content = 3;
+}
+message CreatePostResponse {
+  message CreatedPost {
+    string id = 1;
+    string title = 2;
+    string content = 3;
+    string author_id = 4;
+    uint64 created_at = 5;
+    uint64 updated_at = 6;
+  }
+  CreatedPost created = 7;
+}
+
+message UpVotePostRequest {
+  string access_token = 1;
+  string post_id = 2;
+}
+message UpVotePostResponse { string message = 1; }
+
+message DownVotePostRequest {
+  string access_token = 1;
+  string post_id = 2;
+}
+message DownVotePostResponse { string message = 1; }
+
+message SavePostRequest {
+  string access_token = 1;
+  string post_id = 2;
+}
+message SavePostResponse {
+  string saved_post_id = 1;
+  uint64 created_at = 2;
+}
+
+message UnSavePostRequest {
+  string access_token = 1;
+  string post_id = 2;
+}
+message UnSavePostResponse { string message = 1; }
+
+message GetAllSavedPostsRequest {
+  string access_token = 1;
+  string sort = 2;
+  uint32 limit = 3;
+  uint32 offset = 4;
+}
+message GetAllSavedPostsResponse { repeated PostData posts = 1; }
+
+message CheckPostInteractedRequest {
+  string access_token = 1;
+  string post_id = 2;
+}
+message CheckPostInteractedResponse {
+  string post_id = 1;
+  Voted voted = 2;
+  bool saved = 3;
+}
+
+message AddPostCommentRequest {
+  string access_token = 1;
+  string post_id = 2;
+  string comment = 3;
+}
+message AddPostCommentResponse {
+  message CreatedComment {
+    string id = 1;
+    string comment = 2;
+    string author_id = 3;
+    string post_id = 4;
+    string parent_comment_id = 5;
+    uint64 created_at = 6;
+  }
+  CreatedComment created = 7;
+}

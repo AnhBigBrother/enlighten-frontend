@@ -1,5 +1,6 @@
 "use client";
 
+import { UpdateMe } from "@/actions/grpc/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CollapsibleContent, CollapsibleMenu } from "@/components/ui/collapsible";
@@ -14,44 +15,70 @@ import {
 } from "@/components/ui/form";
 import { Input, PasswordInput } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { GetMeResponse } from "@/grpc/protobuf/user_service";
 import { useToast } from "@/hooks/use-toast";
-import { _patch } from "@/lib/fetch";
-import { MyProfileDTO, MyProfileSchema } from "@/schemas/my-profile";
-import { TUserInfo } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-const UpdateProfileForm = ({ userData }: { userData: TUserInfo }) => {
+const MyProfileSchema = z
+	.object({
+		name: z
+			.string()
+			.min(3, {
+				message: "Name must be 3 characters or longer",
+			})
+			.max(30, {
+				message: "Name must be less than 30 characters",
+			}),
+		image: z.string(),
+		newPassword: z.string().refine((newPwd: string) => newPwd === "" || newPwd.length >= 6, {
+			message: "Password must be 6 characters or longer",
+		}),
+		confirmPassword: z.string(),
+		bio: z.string().refine((bio) => bio !== null && bio.length <= 255, {
+			message: "Bio must in range 0-255 characters",
+		}),
+	})
+	.refine((data) => data.newPassword === data.confirmPassword, {
+		message: "Password does not match",
+		path: ["confirmPassword"],
+	});
+
+const UpdateProfileForm = ({ userData }: { userData: GetMeResponse }) => {
 	const { toast } = useToast();
 	const [isPending, setIsPending] = useState<boolean>(false);
-	const form = useForm<MyProfileDTO>({
+	const form = useForm<z.infer<typeof MyProfileSchema>>({
 		resolver: zodResolver(MyProfileSchema),
 		defaultValues: {
-			image: userData.image || "",
+			image: userData.image,
 			name: userData.name,
-			bio: userData.bio || "",
+			bio: userData.bio,
 			newPassword: "",
 			confirmPassword: "",
 		},
 	});
-	const onSubmit = async (data: MyProfileDTO) => {
+	const onSubmit = async (data: z.infer<typeof MyProfileSchema>) => {
 		setIsPending(true);
-		_patch("api/v1/me", {
-			body: {
-				name: data.name,
-				image: data.image,
-				password: data.newPassword,
-				bio: data.bio,
-			},
+		UpdateMe({
+			bio: data.bio,
+			image: data.image,
+			name: data.name,
+			password: data.newPassword,
 		})
-			.then(({ access_token, refresh_token }) => {
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
+			.then(() => {
 				toast({
 					title: "Success",
 					description: "Your profile has been updated successfully.",
 				});
-				window.location.href = `/api/setCookies?access_token=${access_token}&refresh_token=${refresh_token}`;
 			})
 			.catch((err) => {
 				console.error(err);
@@ -81,10 +108,10 @@ const UpdateProfileForm = ({ userData }: { userData: TUserInfo }) => {
 								<FormMessage></FormMessage>
 								<FormDescription>This is your public profile picture.</FormDescription>
 							</FormItem>
-							<Avatar className='h-20 w-20'>
+							<Avatar className='h-20 w-20 border'>
 								<AvatarImage src={field.value} />
 								<AvatarFallback>
-									<User className='h-full w-full bg-accent p-5' />
+									<User className='h-full w-full bg-gradient-to-br from-secondary to-background p-5' />
 								</AvatarFallback>
 							</Avatar>
 						</div>

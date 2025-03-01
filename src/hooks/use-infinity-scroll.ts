@@ -1,10 +1,10 @@
 "use client";
 
-import { _get } from "@/lib/fetch";
+import { ActionResponse } from "@/actions/grpc/_utils";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const useInfinityScroll = <T>(
-	path: string,
+	action: (limit: number, offset: number) => Promise<ActionResponse<T[]>>,
 	limit: number,
 	loadedData?: T[],
 	pingState?: any,
@@ -38,13 +38,14 @@ const useInfinityScroll = <T>(
 
 	useEffect(() => {
 		if (isLoadingMore && hasMore) {
-			_get(path, {
-				searchParams: {
-					limit: `${limit}`,
-					offset: `${offset}`,
-				},
-			})
-				.then((more: T[]) => {
+			action(3, offset)
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
+				.then((more) => {
 					if (more.length === 0) {
 						setHasMore(false);
 						return;

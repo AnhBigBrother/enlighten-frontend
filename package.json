@@ -6,9 +6,11 @@
 		"dev": "next dev --turbopack",
 		"build": "next build && cp -r ./public ./.next/standalone/public && cp -r ./.next/static ./.next/standalone/.next/static",
 		"start": "node .next/standalone/server.js",
-		"lint": "next lint"
+		"lint": "next lint",
+		"gen-proto": "cd proto; sh gen.sh; cd ..;"
 	},
 	"dependencies": {
+		"@grpc/grpc-js": "^1.12.6",
 		"@hookform/resolvers": "^3.9.1",
 		"@radix-ui/react-avatar": "^1.1.1",
 		"@radix-ui/react-checkbox": "^1.1.2",
@@ -35,6 +37,7 @@
 		"sharp": "^0.33.5",
 		"tailwind-merge": "^2.5.5",
 		"tailwindcss-animate": "^1.0.7",
+		"ts-proto": "^2.6.1",
 		"zod": "^3.23.8",
 		"zod-validation-error": "^3.4.0",
 		"zustand": "^5.0.1"

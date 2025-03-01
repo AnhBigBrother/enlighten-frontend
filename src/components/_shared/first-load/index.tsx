@@ -1,10 +1,10 @@
 "use client";
 
+import { GetSession } from "@/actions/grpc/user";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { _get } from "@/lib/fetch";
 import useProgressStore from "@/stores/progress-store";
-import useUserStore, { TUser } from "@/stores/user-store";
+import useUserStore from "@/stores/user-store";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
@@ -24,15 +24,15 @@ export const FirstLoad = () => {
 	}, [pathName]);
 
 	useEffect(() => {
-		_get("api/v1/me/session")
-			.then((userSession: TUser) => {
-				if (!userSession) {
+		GetSession()
+			.then((res) => {
+				if (res.error || !res.data) {
 					throw new Error("Session not found.");
 				}
-				updateUser(userSession);
+				updateUser(res.data);
 				toast({
 					title: "Welcome!",
-					description: `You are loged in as ${userSession.name}`,
+					description: `You are loged in as ${res.data.name}`,
 				});
 			})
 			.catch((err) => {

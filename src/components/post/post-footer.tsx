@@ -1,7 +1,14 @@
 "use client";
 
+import {
+	CheckPostInteracted,
+	DownVotePost,
+	SavePost,
+	UnSavePost,
+	UpVotePost,
+} from "@/actions/grpc/post";
+import { Voted } from "@/grpc/protobuf/types";
 import { useToast } from "@/hooks/use-toast";
-import { _delete, _get, _post } from "@/lib/fetch";
 import { cn } from "@/lib/utils";
 import useUserStore from "@/stores/user-store";
 import { ArrowBigDown, ArrowBigUp, Bookmark, MessageSquare } from "lucide-react";
@@ -14,7 +21,7 @@ type Props = {
 	up_voted: number;
 	down_voted: number;
 	comments_count: number;
-	created_at: string;
+	created_at: number;
 };
 
 const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Props) => {
@@ -29,10 +36,22 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
-			_get(`/api/v1/posts/${id}/check`)
-				.then(({ saved, voted }) => {
-					setHasVoted(voted);
+			CheckPostInteracted(id)
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
+				.then(({ voted, saved }) => {
 					setHasSaved(saved);
+					if (voted === Voted.UP) {
+						setHasVoted("up");
+					} else if (voted === Voted.DOWN) {
+						setHasVoted("down");
+					} else {
+						setHasVoted("none");
+					}
 				})
 				.catch((err) => {
 					console.error(err);
@@ -44,7 +63,13 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 		e.preventDefault();
 		e.stopPropagation();
 		setIsVoting(true);
-		_post(`api/v1/posts/${id}/vote/up`)
+		UpVotePost(id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -71,7 +96,13 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 		e.preventDefault();
 		e.stopPropagation();
 		setIsVoting(true);
-		_post(`api/v1/posts/${id}/vote/down`)
+		DownVotePost(id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");
@@ -96,7 +127,13 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	};
 	const handleClickSave = () => {
 		setIsSaving(true);
-		_post(`/api/v1/posts/${id}/save`)
+		SavePost(id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				toast({
 					title: "Success",
@@ -118,7 +155,13 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 	};
 	const handleClickUnSave = () => {
 		setIsSaving(true);
-		_delete(`/api/v1/posts/${id}/save`)
+		UnSavePost(id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				toast({
 					title: "Success",
@@ -150,10 +193,14 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 						className={cn(
 							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent hover:text-primary disabled:text-muted-foreground",
 							{
-								"bg-secondary text-primary": user && hasVoted === "up",
+								"text-primary": user && hasVoted === "up",
 							},
 						)}>
-						<ArrowBigUp className='h-5 w-5' />
+						<ArrowBigUp
+							className={cn("h-5 w-5", {
+								"fill-primary": user && hasVoted === "up",
+							})}
+						/>
 						<span>{upVoteCount}</span>
 					</button>
 					<button
@@ -163,10 +210,14 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 						className={cn(
 							"flex h-full flex-row items-center space-x-1 rounded-xl px-2 hover:bg-accent hover:text-primary disabled:text-muted-foreground",
 							{
-								"bg-secondary text-primary": user && hasVoted === "down",
+								"text-primary": user && hasVoted === "down",
 							},
 						)}>
-						<ArrowBigDown className='h-5 w-5' />
+						<ArrowBigDown
+							className={cn("h-5 w-5", {
+								"fill-primary": user && hasVoted === "down",
+							})}
+						/>
 						<span>{downVoteCount}</span>
 					</button>
 				</div>
@@ -183,10 +234,10 @@ const PostFooter = ({ id, up_voted, down_voted, comments_count, created_at }: Pr
 					onClick={hasSaved ? () => handleClickUnSave() : () => handleClickSave()}
 					className={cn(
 						"flex h-full flex-row items-center space-x-1 rounded-xl border px-2 hover:bg-accent hover:text-primary disabled:text-muted-foreground",
-						hasSaved && "bg-secondary text-primary",
+						user && hasSaved && "text-primary",
 					)}>
-					<Bookmark className='h-5 w-5' />
-					<span className='hidden sm:inline-block'>Save</span>
+					<Bookmark className={cn("h-5 w-5", user && hasSaved && "fill-primary")} />
+					<span className='hidden sm:inline-block'>{hasSaved ? "Saved" : "Save"}</span>
 				</button>
 				<button
 					title='share'

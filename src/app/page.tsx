@@ -1,9 +1,10 @@
 import React from "react";
-import { TPostData } from "@/types/post";
 import { PostScroller } from "@/components/scrollers/post-scroller";
 import { BACKEND_DOMAIN } from "@/constants";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { PostData } from "@/grpc/protobuf/types";
+import { GetFollowedPosts } from "@/actions/grpc/post";
 
 export const dynamic = "force-dynamic";
 
@@ -11,23 +12,25 @@ export default async function Home() {
 	const cookieStore = await cookies();
 	const access_token = cookieStore.get("access_token")?.value;
 
-	const serverLoadedPosts: TPostData[] = await fetch(
-		`${BACKEND_DOMAIN}/api/v1/posts?sort=new&limit=5&offset=0`,
-		{
-			headers: {
-				authorization: `Bearer ${access_token}`,
-			},
-		},
-	)
-		.then((res) => res.json())
+	if (!access_token) {
+		redirect("/explore");
+	}
+
+	const serverLoadedPosts = await GetFollowedPosts("new", 3, 0)
+		.then((res) => {
+			if (res.error) {
+				throw res.error;
+			}
+			return res.data!;
+		})
 		.catch((err) => {
 			console.error(err);
-			return notFound();
+			return redirect("/explore");
 		});
 
 	return (
 		<PostScroller
-			path='api/v1/posts'
+			action={GetFollowedPosts}
 			serverLoadedPosts={serverLoadedPosts || []}
 			label={<h1 className='ml-1 text-lg font-bold'>Feeds:</h1>}
 		/>

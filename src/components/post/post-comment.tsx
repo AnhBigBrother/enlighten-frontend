@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { TComment } from "@/types/comment";
 import {
 	ArrowBigDown,
 	ArrowBigUp,
@@ -12,13 +11,21 @@ import {
 	User,
 } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { _get, _post } from "@/lib/fetch";
 import { useToast } from "@/hooks/use-toast";
 import useUserStore from "@/stores/user-store";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/_shared/spinner";
 import { useOnScrollIn } from "@/hooks/use-on-scroll-in";
 import { ProgressLink } from "@/components/_shared/progress-link";
+import {
+	CheckCommentInteracted,
+	DownVoteComment,
+	ReplyComment,
+	UpVoteComment,
+} from "@/actions/grpc/comment";
+import { CommentData, Voted } from "@/grpc/protobuf/types";
+import { GetCommentReplies, GetPostComments } from "@/actions/grpc/public";
+import { AddPostComment } from "@/actions/grpc/post";
 
 const CommentReply = ({
 	postId,
@@ -26,21 +33,33 @@ const CommentReply = ({
 	setIsReplyOpen,
 }: {
 	postId: string;
-	replyData: TComment;
+	replyData: CommentData;
 	setIsReplyOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const { toast } = useToast();
 	const [hasVoted, setHasVoted] = useState<"up" | "none" | "down">("none");
-	const [upVoted, setUpVoted] = useState<number>(replyData.up_voted);
-	const [downVoted, setDownVoted] = useState<number>(replyData.down_voted);
+	const [upVoted, setUpVoted] = useState<number>(replyData.upvote);
+	const [downVoted, setDownVoted] = useState<number>(replyData.downvote);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const user = useUserStore.use.user();
 
 	useEffect(() => {
 		if (user) {
-			_get(`/api/v1/posts/${postId}/comments/${replyData.id}/check`)
+			CheckCommentInteracted(replyData.id)
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
 				.then(({ voted }) => {
-					setHasVoted(voted);
+					if (voted === Voted.UP) {
+						setHasVoted("up");
+					} else if (voted === Voted.DOWN) {
+						setHasVoted("down");
+					} else {
+						setHasVoted("none");
+					}
 				})
 				.catch((err) => {
 					console.error(err);
@@ -51,7 +70,13 @@ const CommentReply = ({
 
 	const handleUpVoteComment = () => {
 		setIsLoading(true);
-		_post(`api/v1/posts/${postId}/comments/${replyData.id}/vote/up`)
+		UpVoteComment(replyData.id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -67,7 +92,7 @@ const CommentReply = ({
 			.catch((err) => {
 				toast({
 					title: "Error",
-					description: err.error || "Error when upvoting comment.",
+					description: "Error when upvoting comment.",
 					variant: "destructive",
 				});
 				console.error(err);
@@ -76,7 +101,13 @@ const CommentReply = ({
 	};
 	const handleDownVoteComment = () => {
 		setIsLoading(true);
-		_post(`api/v1/posts/${postId}/comments/${replyData.id}/vote/down`)
+		DownVoteComment(replyData.id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");
@@ -92,7 +123,7 @@ const CommentReply = ({
 			.catch((err) => {
 				toast({
 					title: "Error",
-					description: err.error || "Error when downvoting comment.",
+					description: "Error when downvoting comment.",
 					variant: "destructive",
 				});
 				console.error(err);
@@ -103,16 +134,16 @@ const CommentReply = ({
 	return (
 		<div className='my-2 flex flex-col text-sm'>
 			<ProgressLink
-				href={`/user/${replyData.author_id}`}
+				href={`/user/${replyData.author?.id}`}
 				className='flex w-full flex-row items-center space-x-2'>
-				<Avatar className='h-8 w-8'>
-					<AvatarImage src={replyData.author_image}></AvatarImage>
+				<Avatar className='h-8 w-8 border'>
+					<AvatarImage src={replyData.author?.image}></AvatarImage>
 					<AvatarFallback>
-						<User className='h-full w-full cursor-pointer bg-accent p-2' />
+						<User className='h-full w-full cursor-pointer bg-gradient-to-br from-secondary to-background p-2' />
 					</AvatarFallback>
 				</Avatar>
 				<div className='flex flex-col items-start justify-center font-semibold'>
-					<h4 className='font-semibold'>{replyData.author_name}</h4>
+					<h4 className='font-semibold'>{replyData.author?.name}</h4>
 					<span className='text-xs font-light text-muted-foreground'>
 						{new Date(replyData.created_at).toLocaleTimeString("en-us", {
 							year: "numeric",
@@ -132,24 +163,32 @@ const CommentReply = ({
 							className={cn(
 								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"bg-secondary text-primary": hasVoted === "up",
+									"text-primary": hasVoted === "up",
 								},
 							)}
 							disabled={isLoading}
 							onClick={() => handleUpVoteComment()}>
-							<ArrowBigUp className='mr-1 h-5 w-5' />
+							<ArrowBigUp
+								className={cn("mr-1 h-5 w-5", {
+									"fill-primary": hasVoted === "up",
+								})}
+							/>
 							<span className='pr-1'>{upVoted}</span>
 						</button>
 						<button
 							className={cn(
 								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"bg-secondary text-primary": hasVoted === "down",
+									"text-primary": hasVoted === "down",
 								},
 							)}
 							disabled={isLoading}
 							onClick={() => handleDownVoteComment()}>
-							<ArrowBigDown className='mr-1 h-5 w-5' />
+							<ArrowBigDown
+								className={cn("mr-1 h-5 w-5", {
+									"fill-primary": hasVoted === "down",
+								})}
+							/>
 							<span className='pr-1'>{downVoted}</span>
 						</button>
 					</div>
@@ -174,7 +213,7 @@ const ReplyWritter = ({
 	postId: string;
 	parentCommentId: string;
 	setIsReplyOpen: Dispatch<SetStateAction<boolean>>;
-	setReplies: Dispatch<SetStateAction<TComment[]>>;
+	setReplies: Dispatch<SetStateAction<CommentData[]>>;
 }) => {
 	const user = useUserStore.use.user();
 	const { toast } = useToast();
@@ -182,24 +221,28 @@ const ReplyWritter = ({
 
 	const handleSubmitComment = (e: React.MouseEvent) => {
 		e.preventDefault();
-		_post(`api/v1/posts/${postId}/comments/${parentCommentId}/reply`, {
-			body: {
-				reply: reply,
-			},
-		})
-			.then((com: TComment) => {
+		ReplyComment(parentCommentId, postId, reply)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!.created!;
+			})
+			.then((com) => {
 				setReplies((pre) => {
-					const newCom: TComment = {
+					const newCom: CommentData = {
 						id: com.id,
-						author_email: user!.email,
-						author_id: com.author_id,
-						author_image: user!.image,
-						author_name: user!.name,
-						comment: com.comment,
+						author: {
+							id: com.author_id,
+							email: user!.email,
+							image: user!.image,
+							name: user!.name,
+						},
+						comment: reply,
 						created_at: com.created_at,
-						down_voted: 0,
-						up_voted: 0,
-						parent_comment_id: null,
+						upvote: 0,
+						downvote: 0,
+						parent_comment_id: "",
 						post_id: postId,
 					};
 					return [newCom, ...pre];
@@ -248,22 +291,34 @@ const ReplyWritter = ({
 	);
 };
 
-const Comment = ({ commentData, postId }: { commentData: TComment; postId: string }) => {
+const Comment = ({ commentData, postId }: { commentData: CommentData; postId: string }) => {
 	const [hasVoted, setHasVoted] = useState<"up" | "none" | "down">("none");
-	const [upVoted, setUpVoted] = useState<number>(commentData.up_voted);
-	const [downVoted, setDownVoted] = useState<number>(commentData.down_voted);
+	const [upVoted, setUpVoted] = useState<number>(commentData.upvote);
+	const [downVoted, setDownVoted] = useState<number>(commentData.downvote);
 	const [isReplyOpen, setIsReplyOpen] = useState<boolean>(false);
 	const [showReplies, setShowReplies] = useState<boolean>(false);
 	const [isLoadingReplies, setIsLoadingReplies] = useState<boolean>(false);
 	const [isVoting, setIsVoting] = useState<boolean>(false);
-	const [replies, setReplies] = useState<TComment[]>([]);
+	const [replies, setReplies] = useState<CommentData[]>([]);
 	const user = useUserStore.use.user();
 	const { toast } = useToast();
 	useEffect(() => {
 		if (user) {
-			_get(`/api/v1/posts/${postId}/comments/${commentData.id}/check`)
+			CheckCommentInteracted(commentData.id)
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
 				.then(({ voted }) => {
-					setHasVoted(voted);
+					if (voted === Voted.UP) {
+						setHasVoted("up");
+					} else if (voted === Voted.DOWN) {
+						setHasVoted("down");
+					} else {
+						setHasVoted("none");
+					}
 				})
 				.catch((err) => {
 					console.error(err);
@@ -275,8 +330,19 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	useEffect(() => {
 		if (showReplies) {
 			setIsLoadingReplies(true);
-			_get(`/api/v1/posts/${postId}/comments/${commentData.id}`)
-				.then((reps: TComment[]) => {
+			GetCommentReplies({
+				post_id: postId,
+				comment_id: commentData.id,
+				limit: 10,
+				offset: 0,
+			})
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
+				.then((reps) => {
 					setReplies(reps);
 				})
 				.catch((err) => console.error(err))
@@ -286,7 +352,13 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 
 	const handleUpVoteComment = () => {
 		setIsVoting(true);
-		_post(`api/v1/posts/${postId}/comments/${commentData.id}/vote/up`)
+		UpVoteComment(commentData.id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				if (hasVoted === "up") {
 					setHasVoted("none");
@@ -302,7 +374,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 			.catch((err) => {
 				toast({
 					title: "Error",
-					description: err.error || "Error when upvoting comment.",
+					description: "Error when upvoting comment.",
 					variant: "destructive",
 				});
 				console.error(err);
@@ -311,7 +383,13 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	};
 	const handleDownVoteComment = () => {
 		setIsVoting(true);
-		_post(`api/v1/posts/${postId}/comments/${commentData.id}/vote/down`)
+		DownVoteComment(commentData.id)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
 			.then(() => {
 				if (hasVoted === "down") {
 					setHasVoted("none");
@@ -327,7 +405,7 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 			.catch((err) => {
 				toast({
 					title: "Error",
-					description: err.error || "Error when downvoting comment.",
+					description: "Error when downvoting comment.",
 					variant: "destructive",
 				});
 				console.error(err);
@@ -338,16 +416,16 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 	return (
 		<div className='flex flex-col text-sm'>
 			<ProgressLink
-				href={`/user/${commentData.author_id}`}
+				href={`/user/${commentData.author?.id}`}
 				className='flex w-full flex-row items-center space-x-2'>
-				<Avatar className='h-8 w-8'>
-					<AvatarImage src={commentData.author_image}></AvatarImage>
+				<Avatar className='h-8 w-8 border'>
+					<AvatarImage src={commentData.author?.image}></AvatarImage>
 					<AvatarFallback>
-						<User className='h-full w-full cursor-pointer bg-accent p-2' />
+						<User className='h-full w-full cursor-pointer bg-gradient-to-br from-secondary to-background p-2' />
 					</AvatarFallback>
 				</Avatar>
 				<div className='flex flex-col items-start justify-center font-semibold'>
-					<h4 className='font-semibold'>{commentData.author_name}</h4>
+					<h4 className='font-semibold'>{commentData.author?.name}</h4>
 					<span className='text-xs font-light text-muted-foreground'>
 						{new Date(commentData.created_at).toLocaleTimeString("en-us", {
 							year: "numeric",
@@ -367,24 +445,32 @@ const Comment = ({ commentData, postId }: { commentData: TComment; postId: strin
 							className={cn(
 								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"bg-secondary text-primary": hasVoted === "up",
+									"text-primary": hasVoted === "up",
 								},
 							)}
 							disabled={isVoting}
 							onClick={() => handleUpVoteComment()}>
-							<ArrowBigUp className='mr-1 h-5 w-5' />
+							<ArrowBigUp
+								className={cn("mr-1 h-5 w-5", {
+									"fill-primary": hasVoted === "up",
+								})}
+							/>
 							<span className='pr-1'>{upVoted}</span>
 						</button>
 						<button
 							className={cn(
 								"flex h-fit flex-row items-center justify-center rounded-lg p-1 hover:text-primary disabled:text-muted-foreground",
 								{
-									"bg-secondary text-primary": hasVoted === "down",
+									"text-primary": hasVoted === "down",
 								},
 							)}
 							disabled={isVoting}
 							onClick={() => handleDownVoteComment()}>
-							<ArrowBigDown className='mr-1 h-5 w-5' />
+							<ArrowBigDown
+								className={cn("mr-1 h-5 w-5", {
+									"fill-primary": hasVoted === "down",
+								})}
+							/>
 							<span className='pr-1'>{downVoted}</span>
 						</button>
 					</div>
@@ -456,7 +542,7 @@ const CommentWritter = ({
 	setComments,
 }: {
 	postId: string;
-	setComments: Dispatch<SetStateAction<TComment[]>>;
+	setComments: Dispatch<SetStateAction<CommentData[]>>;
 }) => {
 	const user = useUserStore.use.user();
 	const { toast } = useToast();
@@ -470,24 +556,28 @@ const CommentWritter = ({
 
 	const handleSubmitComment = (e: React.MouseEvent) => {
 		e.preventDefault();
-		_post(`api/v1/posts/${postId}/comments`, {
-			body: {
-				comment: comment,
-			},
-		})
-			.then((com: TComment) => {
+		AddPostComment(postId, comment)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!.created!;
+			})
+			.then((com) => {
 				setComments((pre) => {
-					const newCom: TComment = {
+					const newCom: CommentData = {
 						id: com.id,
-						author_email: user!.email,
-						author_id: com.author_id,
-						author_image: user!.image,
-						author_name: user!.name,
-						comment: com.comment,
+						author: {
+							id: com.author_id,
+							email: user!.email,
+							image: user!.image,
+							name: user!.name,
+						},
+						comment: comment,
 						created_at: com.created_at,
-						down_voted: 0,
-						up_voted: 0,
-						parent_comment_id: null,
+						upvote: 0,
+						downvote: 0,
+						parent_comment_id: "",
 						post_id: postId,
 					};
 					return [newCom, ...pre];
@@ -538,7 +628,7 @@ const CommentWritter = ({
 
 const PostComment = ({ postId }: { postId: string }) => {
 	const { toast } = useToast();
-	const [comments, setComments] = useState<TComment[]>([]);
+	const [comments, setComments] = useState<CommentData[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [offset, setOffset] = useState<number>(0);
@@ -547,13 +637,18 @@ const PostComment = ({ postId }: { postId: string }) => {
 	useEffect(() => {
 		if (hasIntersected && hasMore && !isLoading) {
 			setIsLoading(true);
-			_get(`/api/v1/posts/${postId}/comments`, {
-				searchParams: {
-					offset: `${offset}`,
-					limit: "5",
-				},
+			GetPostComments({
+				post_id: postId,
+				limit: 5,
+				offset,
 			})
-				.then((data: TComment[]) => {
+				.then((res) => {
+					if (res.error) {
+						throw res.error;
+					}
+					return res.data!;
+				})
+				.then((data) => {
 					if (data.length === 0) {
 						setHasMore(false);
 						return;

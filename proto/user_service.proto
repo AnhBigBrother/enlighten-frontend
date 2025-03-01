@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package pb;
+
+import "types.proto";
+
+option go_package = "github.com/AnhBigBrother/enlighten-backend/internal/pb";
+
+service User {
+  rpc SignOut(SignOutRequest) returns (SignOutResponse) {}
+  rpc GetMe(GetMeRequest) returns (GetMeResponse) {}
+  rpc UpdateMe(UpdateMeRequest) returns (UpdateMeResponse) {}
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse) {}
+  rpc GetMyOverview(GetMyOverviewRequest) returns (GetMyOverviewResponse) {}
+  rpc GetMyPost(GetMyPostRequest) returns (GetMyPostResponse) {}
+  rpc FollowUser(FollowUserRequest) returns (FollowUserResponse) {}
+  rpc UnFollowUser(UnFollowUserRequest) returns (UnFollowUserResponse) {}
+  rpc CheckUserFollowed(CheckUserFollowedRequest)
+      returns (CheckUserFollowedResponse) {}
+  rpc GetFollowedUsers(GetFollowedUsersRequest)
+      returns (GetFollowedUsersResponse) {}
+}
+
+message SignOutRequest { string refresh_token = 1; }
+message SignOutResponse { string message = 1; }
+
+message UpdateMeRequest {
+  string name = 1;
+  string password = 2;
+  string image = 3;
+  string bio = 4;
+}
+message UpdateMeResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message GetMeRequest { string access_token = 1; }
+message GetMeResponse {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+  string image = 4;
+  string bio = 5;
+  string refresh_token = 6;
+  uint64 created_at = 7;
+  uint64 updateMed_at = 8;
+}
+
+message GetSessionRequest { string access_token = 1; }
+message GetSessionResponse {
+  string jti = 1;
+  string sub = 2;
+  uint64 exp = 3;
+  uint64 iat = 4;
+  string email = 5;
+  string name = 6;
+  string image = 7;
+}
+
+message GetMyOverviewRequest { string access_token = 1; }
+message GetMyOverviewResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string image = 4;
+  string bio = 5;
+  uint32 total_posts = 6;
+  uint32 total_upvote = 7;
+  uint32 total_downvote = 8;
+  uint32 follower = 9;
+  uint32 following = 10;
+  uint64 created_at = 11;
+  uint64 updated_at = 12;
+}
+
+message GetMyPostRequest {
+  string access_token = 1;
+  string sort = 2;
+  uint32 limit = 3;
+  uint32 offset = 4;
+}
+message GetMyPostResponse { repeated PostData posts = 1; }
+
+message FollowUserRequest {
+  string user_id = 1;
+  string access_token = 2;
+}
+message FollowUserResponse { string message = 1; }
+
+message UnFollowUserRequest {
+  string user_id = 1;
+  string access_token = 2;
+}
+message UnFollowUserResponse { string message = 1; }
+
+message CheckUserFollowedRequest {
+  string user_id = 1;
+  string access_token = 2;
+}
+message CheckUserFollowedResponse {
+  string follow_id = 1;
+  uint64 created_at = 2;
+}
+
+message GetFollowedUsersRequest {
+  string access_token = 1;
+  uint32 limit = 2;
+  uint32 offset = 3;
+}
+message GetFollowedUsersResponse { repeated UserBaseInfo followed = 1; }

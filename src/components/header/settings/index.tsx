@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, User } from "lucide-react";
-import { _post } from "@/lib/fetch";
 import useUserStore from "@/stores/user-store";
 import { useToast } from "@/hooks/use-toast";
 import { NotebookPen } from "lucide-react";
@@ -19,16 +18,23 @@ import React from "react";
 import { IconButton } from "@/components/ui/icon-button";
 import { ProgressLink } from "@/components/_shared/progress-link";
 import { ThemeSetting } from "@/components/header/settings/theme-setting";
+import { SignOut } from "@/actions/grpc/user";
 
 export const Setting = () => {
 	const user = useUserStore.use.user();
 	const resetUser = useUserStore.use.reset();
 	const { toast } = useToast();
 	const handleLogout = () => {
-		_post("api/v1/auth/signout")
-			.then((result) => {
+		SignOut()
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				return res.data!;
+			})
+			.then((data) => {
 				toast({
-					title: result.message || "Loged out!",
+					title: data.message || "Loged out!",
 					description: "You have been loged out",
 				});
 				fetch(`/api/setCookies?access_token=&refresh_token=`, {
@@ -75,10 +81,10 @@ export const Setting = () => {
 
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Avatar className='cursor-pointer'>
+					<Avatar className='cursor-pointer border'>
 						<AvatarImage src={user?.image} />
 						<AvatarFallback>
-							<User className='h-full w-full bg-accent p-2' />
+							<User className='h-full w-full bg-gradient-to-br from-secondary to-background p-2' />
 						</AvatarFallback>
 					</Avatar>
 				</DropdownMenuTrigger>
@@ -93,7 +99,7 @@ export const Setting = () => {
 										<Avatar>
 											<AvatarImage src={user?.image} />
 											<AvatarFallback>
-												<User className='h-full w-full rounded-full bg-accent p-2' />
+												<User className='h-full w-full rounded-full bg-gradient-to-br from-secondary to-background p-2' />
 											</AvatarFallback>
 										</Avatar>
 										<span className='max-w-32 truncate'>{user?.name}</span>

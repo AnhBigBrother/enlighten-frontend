@@ -1,3 +1,4 @@
+import { UserBaseInfo } from "@/grpc/protobuf/types";
 import createSelectors from "@/stores/selector";
 import { create } from "zustand";
 
@@ -7,9 +8,7 @@ export type TRecent = {
 	up_voted: number;
 	down_voted: number;
 	comment_count: number;
-	author_id: string;
-	author_name: string;
-	author_image: string;
+	author: UserBaseInfo;
 };
 
 export type TRecentStore = {

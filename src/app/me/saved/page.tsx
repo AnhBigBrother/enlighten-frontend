@@ -1,6 +1,7 @@
+import { GetAllSavedPosts } from "@/actions/grpc/post";
 import { PostScroller } from "@/components/scrollers/post-scroller";
 import { BACKEND_DOMAIN } from "@/constants";
-import { TPostData } from "@/types/post";
+import { PostData } from "@/grpc/protobuf/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -13,16 +14,12 @@ const Saved = async () => {
 		redirect("/");
 	}
 
-	const savedPosts: TPostData[] = await fetch(`${BACKEND_DOMAIN}/api/v1/posts/saved`, {
-		headers: {
-			authorization: `Bearer ${access_token}`,
-		},
-	})
+	const savedPosts = await GetAllSavedPosts("new", 3, 0)
 		.then((res) => {
-			if (!res.ok) {
-				throw res;
+			if (res.error) {
+				throw res.error;
 			}
-			return res.json();
+			return res.data!;
 		})
 		.catch((err) => {
 			redirect("/");
@@ -30,7 +27,7 @@ const Saved = async () => {
 
 	return (
 		<PostScroller
-			path='api/v1/posts/saved'
+			action={GetAllSavedPosts}
 			sort={false}
 			clipContent={true}
 			serverLoadedPosts={savedPosts || []}

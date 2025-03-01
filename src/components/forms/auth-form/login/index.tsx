@@ -1,5 +1,6 @@
 "use client";
 
+import { SignIn } from "@/actions/grpc/public";
 import { FormError, FormSuccess } from "@/components/forms/auth-form/form-notification";
 import { FormWrapper } from "@/components/forms/auth-form/form-wrapper";
 import { Button } from "@/components/ui/button";
@@ -12,37 +13,54 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input, PasswordInput } from "@/components/ui/input";
-import { _post } from "@/lib/fetch";
-import { LoginDTO, LoginSchema } from "@/schemas/auth";
+import { FRONTEND_URL } from "@/constants";
+import { SignInRequest } from "@/grpc/protobuf/public_service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const LoginSchema = z.object({
+	email: z.string().email(),
+	password: z.string().min(6, {
+		message: "Password must be 6 characters or longer",
+	}),
+});
 
 function LoginForm() {
 	const [isPending, setIsPending] = useState<boolean>(false);
 	const [success, setSuccess] = useState<string>("");
 	const [error, setError] = useState<string>("");
-	const form = useForm<LoginDTO>({
+	const form = useForm<SignInRequest>({
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
 			email: "",
 			password: "",
 		},
 	});
-	const onSubmit = async (data: LoginDTO) => {
+	const onSubmit = async (req: SignInRequest) => {
 		setIsPending(true);
 		setError("");
-		const { access_token, refresh_token } = await _post("api/v1/auth/signin", {
-			body: data,
-		}).catch((err) => {
-			setSuccess("");
-			setError(err.error);
-			setIsPending(false);
-			return;
-		});
-		setError("");
-		setSuccess("Success!");
-		window.location.href = `/api/setCookies?access_token=${access_token}&refresh_token=${refresh_token}`;
+		await SignIn(req)
+			.then((res) => {
+				if (res.error || !res.data) {
+					throw res.error;
+				}
+				return res.data;
+			})
+			.then(() => {
+				setError("");
+				setSuccess("Success!");
+			})
+			.catch((err) => {
+				setSuccess("");
+				setError(err.error);
+				setIsPending(false);
+				return;
+			})
+			.finally(() => {
+				window.location.href = FRONTEND_URL;
+			});
 	};
 
 	return (

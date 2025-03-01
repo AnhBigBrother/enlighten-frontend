@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/AnhBigBrother/enlighten-backend/internal/pb";
+
+service Game {
+  rpc SolveSudoku(SolveSudokuRequest) returns (SolveSudokuResponse) {}
+  rpc GenerateSudoku(GenerateSudokuRequest) returns (GenerateSudokuResponse) {}
+  rpc CheckSudokuSolvable(CheckSudokuSolvableRequest)
+      returns (CheckSudokuSolvableResponse) {}
+}
+
+message SolveSudokuRequest {
+  repeated int32 line1 = 1;
+  repeated int32 line2 = 2;
+  repeated int32 line3 = 3;
+  repeated int32 line4 = 4;
+  repeated int32 line5 = 5;
+  repeated int32 line6 = 6;
+  repeated int32 line7 = 7;
+  repeated int32 line8 = 8;
+  repeated int32 line9 = 9;
+}
+message SolveSudokuResponse {
+  repeated int32 line1 = 1;
+  repeated int32 line2 = 2;
+  repeated int32 line3 = 3;
+  repeated int32 line4 = 4;
+  repeated int32 line5 = 5;
+  repeated int32 line6 = 6;
+  repeated int32 line7 = 7;
+  repeated int32 line8 = 8;
+  repeated int32 line9 = 9;
+}
+
+message GenerateSudokuRequest { uint32 hide = 1; }
+message GenerateSudokuResponse {
+  repeated int32 line1 = 1;
+  repeated int32 line2 = 2;
+  repeated int32 line3 = 3;
+  repeated int32 line4 = 4;
+  repeated int32 line5 = 5;
+  repeated int32 line6 = 6;
+  repeated int32 line7 = 7;
+  repeated int32 line8 = 8;
+  repeated int32 line9 = 9;
+}
+
+message CheckSudokuSolvableRequest {
+  repeated int32 line1 = 1;
+  repeated int32 line2 = 2;
+  repeated int32 line3 = 3;
+  repeated int32 line4 = 4;
+  repeated int32 line5 = 5;
+  repeated int32 line6 = 6;
+  repeated int32 line7 = 7;
+  repeated int32 line8 = 8;
+  repeated int32 line9 = 9;
+}
+
+message CheckSudokuSolvableResponse { bool solvable = 1; }

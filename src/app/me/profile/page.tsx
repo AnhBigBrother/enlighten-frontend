@@ -1,6 +1,5 @@
+import { GetMe } from "@/actions/grpc/user";
 import { UpdateProfileForm } from "@/components/forms/update-profile-form";
-import { BACKEND_DOMAIN } from "@/constants";
-import { TUserInfo } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -13,16 +12,12 @@ const ProfilePage = async () => {
 		redirect("/");
 	}
 
-	const userData: TUserInfo = await fetch(`${BACKEND_DOMAIN}/api/v1/me`, {
-		headers: {
-			authorization: `Bearer ${access_token}`,
-		},
-	})
+	const userData = await GetMe()
 		.then((res) => {
-			if (!res.ok) {
-				throw res;
+			if (!res.data || res.error) {
+				throw res.error;
 			}
-			return res.json();
+			return res.data!;
 		})
 		.catch((err) => {
 			redirect("/");

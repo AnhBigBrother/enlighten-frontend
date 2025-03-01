@@ -1,8 +1,7 @@
+import { GetMyOverview, GetMyPost } from "@/actions/grpc/user";
 import { PostScroller } from "@/components/scrollers/post-scroller";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BACKEND_DOMAIN } from "@/constants";
-import { TPostData } from "@/types/post";
-import { TUserOverview } from "@/types/user";
 import {
 	NotebookText,
 	Rss,
@@ -24,22 +23,21 @@ const MyPosts = async () => {
 		redirect("/");
 	}
 
-	const getMyOverview: Promise<TUserOverview> = fetch(`${BACKEND_DOMAIN}/api/v1/me/overview`, {
-		headers: {
-			authorization: `Bearer ${access_token}`,
-		},
-	})
-		.then((res) => res.json())
+	const getMyOverview = GetMyOverview()
+		.then((res) => {
+			if (res.error) {
+				throw res.error;
+			}
+			return res.data!;
+		})
 		.catch((err) => notFound());
-	const getMyPosts: Promise<TPostData[]> = fetch(
-		`${BACKEND_DOMAIN}/api/v1/me/posts?sort=new&limit=5&offset=0`,
-		{
-			headers: {
-				authorization: `Bearer ${access_token}`,
-			},
-		},
-	)
-		.then((res) => res.json())
+	const getMyPosts = GetMyPost("new", 3, 0)
+		.then((res) => {
+			if (res.error) {
+				throw res.error;
+			}
+			return res.data!;
+		})
 		.catch((err) => redirect("/"));
 
 	const [myOverview, myPosts] = await Promise.all([getMyOverview, getMyPosts]);
@@ -48,10 +46,10 @@ const MyPosts = async () => {
 		<div className='my-10 flex w-full flex-col'>
 			<div className='flex w-full flex-row gap-5'>
 				<div className='aspect-square h-fit w-1/4 min-w-32 max-w-48 flex-shrink-0'>
-					<Avatar className='h-full w-full rounded-lg'>
+					<Avatar className='h-full w-full rounded-lg border'>
 						<AvatarImage src={myOverview.image}></AvatarImage>
 						<AvatarFallback>
-							<User className='h-full w-full bg-accent p-2' />
+							<User className='h-full w-full bg-gradient-to-br from-secondary to-background p-2' />
 						</AvatarFallback>
 					</Avatar>
 				</div>
@@ -96,13 +94,13 @@ const MyPosts = async () => {
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='total upvote'>
 							<ThumbsUp className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{myOverview.total_upvoted}</span>
+							<span className='text-center'>{myOverview.total_upvote}</span>
 						</div>
 						<div
 							className='flex w-fit flex-col items-center gap-y-2'
 							title='total downvote'>
 							<ThumbsDown className='h-7 w-7 stroke-[1.5]' />
-							<span className='text-center'>{myOverview.total_downvoted}</span>
+							<span className='text-center'>{myOverview.total_downvote}</span>
 						</div>
 					</div>
 				</div>
@@ -140,19 +138,19 @@ const MyPosts = async () => {
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='total upvote'>
 					<ThumbsUp className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{myOverview.total_upvoted}</span>
+					<span className='text-center'>{myOverview.total_upvote}</span>
 				</div>
 				<div
 					className='flex w-fit flex-col items-center gap-y-2'
 					title='total downvote'>
 					<ThumbsDown className='h-6 w-6 stroke-[1.5]' />
-					<span className='text-center'>{myOverview.total_downvoted}</span>
+					<span className='text-center'>{myOverview.total_downvote}</span>
 				</div>
 			</div>
 
 			<PostScroller
 				className='mt-2'
-				path={`/api/v1/me/posts`}
+				action={GetMyPost}
 				serverLoadedPosts={myPosts}
 				label={<h1 className='font-bold'>Your posts:</h1>}
 			/>
