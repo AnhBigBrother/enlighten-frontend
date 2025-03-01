@@ -1,7 +1,6 @@
 import { GetMyOverview, GetMyPost } from "@/actions/grpc/user";
 import { PostScroller } from "@/components/scrollers/post-scroller";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BACKEND_DOMAIN } from "@/constants";
 import {
 	NotebookText,
 	Rss,

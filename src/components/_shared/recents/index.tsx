@@ -47,12 +47,12 @@ const RecentPostCard = ({ data }: { data: TRecent }) => {
 				className='flex flex-col p-2'>
 				<div className='mb-1 flex w-full flex-row items-center space-x-2'>
 					<Avatar className='h-8 w-8 border'>
-						<AvatarImage src={data.author_image}></AvatarImage>
+						<AvatarImage src={data.author.image}></AvatarImage>
 						<AvatarFallback>
 							<User className='h-full w-full cursor-pointer bg-gradient-to-br from-secondary to-background p-2' />
 						</AvatarFallback>
 					</Avatar>
-					<h4 className='font-bold'>{data.author_name}</h4>
+					<h4 className='font-bold'>{data.author.name}</h4>
 				</div>
 				<p className='p-1'>{data.title}</p>
 				<div className='flex flex-row gap-3'>

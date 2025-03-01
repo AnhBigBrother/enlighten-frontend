@@ -1,7 +1,5 @@
 import { GetAllSavedPosts } from "@/actions/grpc/post";
 import { PostScroller } from "@/components/scrollers/post-scroller";
-import { BACKEND_DOMAIN } from "@/constants";
-import { PostData } from "@/grpc/protobuf/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";

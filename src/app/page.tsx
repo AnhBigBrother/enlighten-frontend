@@ -1,9 +1,7 @@
 import React from "react";
 import { PostScroller } from "@/components/scrollers/post-scroller";
-import { BACKEND_DOMAIN } from "@/constants";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { PostData } from "@/grpc/protobuf/types";
 import { GetFollowedPosts } from "@/actions/grpc/post";
 
 export const dynamic = "force-dynamic";
