@@ -2,7 +2,7 @@
 
 import { ActionResponse, SortType } from "@/actions/grpc/_utils";
 import { COOKIE_AGE } from "@/constants";
-import { GrpcPublicClient } from "@/grpc/clients";
+import { GrpcPublicClient } from "@/actions/grpc/_utils";
 import {
 	GetAllPostsRequest,
 	GetAllPostsResponse,

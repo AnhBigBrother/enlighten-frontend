@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse } from "@/actions/grpc/_utils";
-import { GrpcGameClient } from "@/grpc/clients";
+import { GrpcGameClient } from "@/actions/grpc/_utils";
 import {
 	CheckSudokuSolvableRequest,
 	CheckSudokuSolvableResponse,

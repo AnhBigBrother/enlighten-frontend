@@ -1,11 +1,17 @@
 "use server";
 
-import { COOKIE_AGE } from "@/constants";
-import { GrpcPublicClient } from "@/grpc/clients";
+import { BACKEND_DOMAIN, CA_CERT, COOKIE_AGE } from "@/constants";
 import { GetAccessTokenRequest, GetAccessTokenResponse } from "@/grpc/protobuf/public_service";
 import { Metadata, status } from "@grpc/grpc-js";
 import { Status } from "@grpc/grpc-js/build/src/constants";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import * as publicService from "@/grpc/protobuf/public_service";
+import * as oauthService from "@/grpc/protobuf/oauth_service";
+import * as userService from "@/grpc/protobuf/user_service";
+import * as postService from "@/grpc/protobuf/post_service";
+import * as commentService from "@/grpc/protobuf/comment_service";
+import * as gameService from "@/grpc/protobuf/game_service";
+import * as grpc from "@grpc/grpc-js";
 
 export type ActionResponse<T> = {
 	data?: T;
@@ -83,4 +89,33 @@ export const preventAccessTokenExpired = async <T>(
 		return res2;
 	}
 	return res;
+};
+
+function loadTLSCreadential() {
+	const certBuffer = Buffer.from(CA_CERT);
+	return grpc.credentials.createSsl(certBuffer);
+}
+
+export const GrpcPublicClient = () => {
+	return new publicService.PublicClient(BACKEND_DOMAIN, loadTLSCreadential());
+};
+
+export const GrpcOAuthClient = () => {
+	return new oauthService.OauthClient(BACKEND_DOMAIN, loadTLSCreadential());
+};
+
+export const GrpcUserClient = () => {
+	return new userService.UserClient(BACKEND_DOMAIN, loadTLSCreadential());
+};
+
+export const GrpcPostClient = () => {
+	return new postService.PostClient(BACKEND_DOMAIN, loadTLSCreadential());
+};
+
+export const GrpcCommentClient = () => {
+	return new commentService.CommentClient(BACKEND_DOMAIN, loadTLSCreadential());
+};
+
+export const GrpcGameClient = () => {
+	return new gameService.GameClient(BACKEND_DOMAIN, loadTLSCreadential());
 };

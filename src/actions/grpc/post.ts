@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse, preventAccessTokenExpired, SortType } from "@/actions/grpc/_utils";
-import { GrpcPostClient } from "@/grpc/clients";
+import { GrpcPostClient } from "@/actions/grpc/_utils";
 import {
 	AddPostCommentRequest,
 	AddPostCommentResponse,

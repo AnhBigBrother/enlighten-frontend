@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse } from "@/actions/grpc/_utils";
-import { GrpcOAuthClient } from "@/grpc/clients";
+import { GrpcOAuthClient } from "@/actions/grpc/_utils";
 import {
 	OauthDiscordRequest,
 	OauthDiscordResponse,

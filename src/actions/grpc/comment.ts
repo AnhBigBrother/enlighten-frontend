@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse, preventAccessTokenExpired } from "@/actions/grpc/_utils";
-import { GrpcCommentClient } from "@/grpc/clients";
+import { GrpcCommentClient } from "@/actions/grpc/_utils";
 import {
 	CheckCommentInteractedRequest,
 	CheckCommentInteractedResponse,
