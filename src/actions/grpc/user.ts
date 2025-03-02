@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse, preventAccessTokenExpired, SortType } from "@/actions/grpc/_utils";
-import { GrpcUserClient } from "@/actions/grpc/_utils";
+import { GrpcUserClient } from "@/grpc/grpc-clients";
 import {
 	CheckUserFollowedRequest,
 	CheckUserFollowedResponse,
