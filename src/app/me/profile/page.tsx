@@ -1,5 +1,5 @@
 import { UpdateProfileForm } from "@/components/forms/update-profile-form";
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 import { TUserInfo } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ const ProfilePage = async () => {
 		redirect("/");
 	}
 
-	const userData: TUserInfo = await fetch(`${BACKEND_DOMAIN}/api/v1/me`, {
+	const userData: TUserInfo = await fetch(`${BACKEND_URL}/api/v1/me`, {
 		headers: {
 			authorization: `Bearer ${access_token}`,
 		},

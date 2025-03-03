@@ -1,4 +1,4 @@
-import { COOKIE_AGE, FRONTEND_DOMAIN } from "@/constants";
+import { COOKIE_AGE, FRONTEND_URL } from "@/constants";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -22,17 +22,17 @@ export async function GET(req: NextRequest) {
 	}
 
 	if (!redirect_to) {
-		return NextResponse.redirect(FRONTEND_DOMAIN, 307);
+		return NextResponse.redirect(FRONTEND_URL, 307);
 	}
 
 	try {
 		const redirect_url = new URL(redirect_to);
 		if (redirect_url.pathname === req.nextUrl.pathname) {
-			return NextResponse.redirect(FRONTEND_DOMAIN, 307);
+			return NextResponse.redirect(FRONTEND_URL, 307);
 		}
 		return NextResponse.redirect(redirect_url, 307);
 	} catch (error) {
-		return NextResponse.redirect(FRONTEND_DOMAIN, 307);
+		return NextResponse.redirect(FRONTEND_URL, 307);
 	}
 }
 

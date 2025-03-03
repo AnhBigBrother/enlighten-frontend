@@ -1,5 +1,5 @@
-export const BACKEND_DOMAIN = process.env.NEXT_PUBLIC_BACKEND_DOMAIN!;
-export const FRONTEND_DOMAIN = process.env.NEXT_PUBLIC_FRONTEND_DOMAIN!;
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+export const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
 
 export const COOKIE_AGE = 7 * 24 * 60 * 60;
 export const TOAST_REMOVE_DELAY = 3000;

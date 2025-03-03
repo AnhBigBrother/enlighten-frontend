@@ -1,6 +1,6 @@
 import {
-	BACKEND_DOMAIN,
-	FRONTEND_DOMAIN,
+	BACKEND_URL,
+	FRONTEND_URL,
 	MICROSOFT_CLIENT_ID,
 	MICROSOFT_CLIENT_SECRET,
 	MICROSOFT_GET_TOKEN_URL,
@@ -28,10 +28,10 @@ export async function GET(req: NextRequest) {
 		}).then((res) => res.json());
 
 		return NextResponse.redirect(
-			`${BACKEND_DOMAIN}/api/v1/auth/microsoft?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_DOMAIN}/api/setCookies`,
+			`${BACKEND_URL}/api/v1/auth/microsoft?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_URL}/api/setCookies`,
 		);
 	} catch (error) {
 		console.error(error);
-		return NextResponse.redirect(FRONTEND_DOMAIN);
+		return NextResponse.redirect(FRONTEND_URL);
 	}
 }

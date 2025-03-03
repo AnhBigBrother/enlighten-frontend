@@ -1,10 +1,10 @@
 import {
-	FRONTEND_DOMAIN,
+	FRONTEND_URL,
 	GOOGLE_REDIRECT_URI,
 	GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET,
 	GOOGLE_GET_TOKEN_URL,
-	BACKEND_DOMAIN,
+	BACKEND_URL,
 } from "@/constants";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,10 +29,10 @@ export async function GET(req: NextRequest) {
 		}).then((res) => res.json());
 
 		return NextResponse.redirect(
-			`${BACKEND_DOMAIN}/api/v1/auth/google?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_DOMAIN}/api/setCookies`,
+			`${BACKEND_URL}/api/v1/auth/google?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_URL}/api/setCookies`,
 		);
 	} catch (error) {
 		console.error(error);
-		return NextResponse.redirect(FRONTEND_DOMAIN);
+		return NextResponse.redirect(FRONTEND_URL);
 	}
 }

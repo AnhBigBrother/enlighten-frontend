@@ -1,6 +1,6 @@
 "use client";
 
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 
 type Methods = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 type Options = {
@@ -11,7 +11,7 @@ type Options = {
 
 /*<---request configuration--->*/
 const request = (path: string, method: Methods, options?: Options) => {
-	const url = new URL(path, BACKEND_DOMAIN);
+	const url = new URL(path, BACKEND_URL);
 	if (options?.searchParams) {
 		for (let key of Object.keys(options?.searchParams))
 			url.searchParams.set(key, options?.searchParams[key]);

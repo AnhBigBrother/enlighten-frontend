@@ -1,6 +1,6 @@
 import { PostScroller } from "@/components/scrollers/post-scroller";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 import { TPostData } from "@/types/post";
 import { TUserOverview } from "@/types/user";
 import {
@@ -24,7 +24,7 @@ const MyPosts = async () => {
 		redirect("/");
 	}
 
-	const getMyOverview: Promise<TUserOverview> = fetch(`${BACKEND_DOMAIN}/api/v1/me/overview`, {
+	const getMyOverview: Promise<TUserOverview> = fetch(`${BACKEND_URL}/api/v1/me/overview`, {
 		headers: {
 			authorization: `Bearer ${access_token}`,
 		},
@@ -32,7 +32,7 @@ const MyPosts = async () => {
 		.then((res) => res.json())
 		.catch((err) => notFound());
 	const getMyPosts: Promise<TPostData[]> = fetch(
-		`${BACKEND_DOMAIN}/api/v1/me/posts?sort=new&limit=5&offset=0`,
+		`${BACKEND_URL}/api/v1/me/posts?sort=new&limit=5&offset=0`,
 		{
 			headers: {
 				authorization: `Bearer ${access_token}`,

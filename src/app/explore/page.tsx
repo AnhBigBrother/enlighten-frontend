@@ -1,7 +1,7 @@
 import React from "react";
 import { TPostData } from "@/types/post";
 import { PostScroller } from "@/components/scrollers/post-scroller";
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 import { notFound } from "next/navigation";
 import { UserHorizontalScroller } from "@/components/scrollers/user-horizontal-scroller";
 
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Explore() {
 	const serverLoadedPosts: TPostData[] = await fetch(
-		`${BACKEND_DOMAIN}/api/v1/posts/all?sort=new&limit=5&offset=0`,
+		`${BACKEND_URL}/api/v1/posts/all?sort=new&limit=5&offset=0`,
 	)
 		.then((res) => res.json())
 		.catch((err) => {

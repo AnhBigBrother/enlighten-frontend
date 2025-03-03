@@ -1,6 +1,6 @@
 import { PostScroller } from "@/components/scrollers/post-scroller";
 import { UserOverview } from "@/components/user/overview";
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 import { TPostData } from "@/types/post";
 import { TUserOverview } from "@/types/user";
 import { notFound } from "next/navigation";
@@ -10,12 +10,12 @@ const UserPage = async ({ params }: { params: Promise<{ userId: string }> }) => 
 	const { userId } = await params;
 
 	const getUserOverview: Promise<TUserOverview> = fetch(
-		`${BACKEND_DOMAIN}/api/v1/users/${userId}/overview`,
+		`${BACKEND_URL}/api/v1/users/${userId}/overview`,
 	)
 		.then((res) => res.json())
 		.catch((err) => notFound());
 	const getUserPosts: Promise<TPostData[]> = fetch(
-		`${BACKEND_DOMAIN}/api/v1/users/${userId}/posts?sort=new&limit=5&offset=0`,
+		`${BACKEND_URL}/api/v1/users/${userId}/posts?sort=new&limit=5&offset=0`,
 	)
 		.then((res) => res.json())
 		.catch((err) => notFound());

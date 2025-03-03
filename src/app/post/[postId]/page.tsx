@@ -5,14 +5,14 @@ import { PostAdditional } from "@/components/post/post-additional";
 import { PostContent } from "@/components/post/post-content";
 import { PostFooter } from "@/components/post/post-footer";
 import { PostHeader } from "@/components/post/post-header";
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 import { TPostData } from "@/types/post";
 import { notFound } from "next/navigation";
 import React from "react";
 
 const PostPage = async ({ params }: { params: Promise<{ postId: string[] }> }) => {
 	const { postId } = await params;
-	const postData: TPostData = await fetch(`${BACKEND_DOMAIN}/api/v1/posts/${postId}`)
+	const postData: TPostData = await fetch(`${BACKEND_URL}/api/v1/posts/${postId}`)
 		.then((res) => res.json())
 		.catch((error) => {
 			return notFound();

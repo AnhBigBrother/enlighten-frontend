@@ -1,7 +1,5 @@
 FROM node:20-alpine AS base
 
-# Multi stage build for optimizing image size.
-
 # BUILDER -------------------------------
 FROM base AS builder
 WORKDIR /app

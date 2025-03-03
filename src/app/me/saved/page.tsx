@@ -1,5 +1,5 @@
 import { PostScroller } from "@/components/scrollers/post-scroller";
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 import { TPostData } from "@/types/post";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ const Saved = async () => {
 		redirect("/");
 	}
 
-	const savedPosts: TPostData[] = await fetch(`${BACKEND_DOMAIN}/api/v1/posts/saved`, {
+	const savedPosts: TPostData[] = await fetch(`${BACKEND_URL}/api/v1/posts/saved`, {
 		headers: {
 			authorization: `Bearer ${access_token}`,
 		},

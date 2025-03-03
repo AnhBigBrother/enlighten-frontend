@@ -1,7 +1,7 @@
 import React from "react";
 import { TPostData } from "@/types/post";
 import { PostScroller } from "@/components/scrollers/post-scroller";
-import { BACKEND_DOMAIN } from "@/constants";
+import { BACKEND_URL } from "@/constants";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 
@@ -12,7 +12,7 @@ export default async function Home() {
 	const access_token = cookieStore.get("access_token")?.value;
 
 	const serverLoadedPosts: TPostData[] = await fetch(
-		`${BACKEND_DOMAIN}/api/v1/posts?sort=new&limit=5&offset=0`,
+		`${BACKEND_URL}/api/v1/posts?sort=new&limit=5&offset=0`,
 		{
 			headers: {
 				authorization: `Bearer ${access_token}`,

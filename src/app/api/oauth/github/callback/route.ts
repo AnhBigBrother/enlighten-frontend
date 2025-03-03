@@ -1,10 +1,10 @@
 import {
-	FRONTEND_DOMAIN,
+	FRONTEND_URL,
 	GITHUB_REDIRECT_URI,
 	GITHUB_CLIENT_ID,
 	GITHUB_CLIENT_SECRET,
 	GITHUB_GET_TOKEN_URL,
-	BACKEND_DOMAIN,
+	BACKEND_URL,
 } from "@/constants";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -28,10 +28,10 @@ export async function GET(req: NextRequest) {
 		}).then((res) => res.json());
 
 		return NextResponse.redirect(
-			`${BACKEND_DOMAIN}/api/v1/auth/github?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_DOMAIN}/api/setCookies`,
+			`${BACKEND_URL}/api/v1/auth/github?token_type=${token.token_type}&access_token=${token.access_token}&redirect_to=${FRONTEND_URL}/api/setCookies`,
 		);
 	} catch (error) {
 		console.error(error);
-		return NextResponse.redirect(FRONTEND_DOMAIN);
+		return NextResponse.redirect(FRONTEND_URL);
 	}
 }
